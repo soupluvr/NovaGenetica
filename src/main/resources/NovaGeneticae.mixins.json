@@ -4,6 +4,7 @@
   "package": "me.orangemonkey68.novageneticae.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "PlayerMixin"
   ],
   "client": [
   ],

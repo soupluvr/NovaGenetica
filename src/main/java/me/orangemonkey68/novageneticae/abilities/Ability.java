@@ -1,6 +1,7 @@
 package me.orangemonkey68.novageneticae.abilities;
 
 import me.orangemonkey68.novageneticae.NovaGeneticae;
+import me.orangemonkey68.novageneticae.client.NovaGeneticaeClient;
 import net.minecraft.text.TranslatableText;
 
 public interface Ability {
@@ -38,7 +39,12 @@ public interface Ability {
     boolean isAllowed();
 
     /**
-     * This code is run in {@link NovaGeneticae#onInitialize()}, and it's recommended that register any event callbacks in this function.
+     * This code is run in {@link NovaGeneticae#onInitialize()}, and it's recommended that register any event callbacks and server packet receivers in this function.
      */
-    void onRegistry();
+    void onRegistryServer();
+
+    /**
+     * This code is run in {@link NovaGeneticaeClient#onInitializeClient()}, and it's recommended to register any client packet recievers in this function.
+     */
+    void onRegistryClient();
 }
