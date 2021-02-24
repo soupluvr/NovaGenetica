@@ -59,18 +59,11 @@ public class AbilityEatGrass implements Ability, UseBlockCallback {
             BlockPos pos = hitResult.getBlockPos();
             HungerManager hunger = player.getHungerManager();
 
-            NovaGeneticae.LOGGER.info("Has ability: {}", ngPlayer.hasAbility(this));
-            NovaGeneticae.LOGGER.info("Hunger not full: {}", hunger.isNotFull());
-
             if(world.getBlockState(pos).getBlock() == Blocks.GRASS_BLOCK && ngPlayer.hasAbility(this) && hunger.isNotFull()){
                 world.setBlockState(pos, Blocks.DIRT.getDefaultState());
 
-                NovaGeneticae.LOGGER.info("Hunger and saturation before: {}, {}", hunger.getFoodLevel(), hunger.getSaturationLevel());
-
                 //TODO: get this hunger value from config
                 hunger.add(5, 6f);
-
-                NovaGeneticae.LOGGER.info("Hunger and saturation after: {}, {}", hunger.getFoodLevel(), hunger.getSaturationLevel());
             }
         }
 

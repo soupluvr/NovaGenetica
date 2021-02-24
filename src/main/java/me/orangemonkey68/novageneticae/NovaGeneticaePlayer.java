@@ -46,4 +46,6 @@ public interface NovaGeneticaePlayer {
      * @param abilityID the Identifier of the ability to remove
      */
     void removeAbility(Identifier abilityID);
+
+    Set<Ability> getAbilities();
 }

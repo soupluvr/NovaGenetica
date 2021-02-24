@@ -4,6 +4,8 @@ import me.orangemonkey68.novageneticae.NovaGeneticae;
 import me.orangemonkey68.novageneticae.client.NovaGeneticaeClient;
 import net.minecraft.text.TranslatableText;
 
+import java.util.Set;
+
 public interface Ability {
     /**
      *

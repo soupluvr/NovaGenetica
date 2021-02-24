@@ -6,6 +6,7 @@ import me.orangemonkey68.novageneticae.abilities.AbilityEatGrass;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -26,10 +27,6 @@ public class NovaGeneticae implements ModInitializer {
 
     @Override
     public void onInitialize() {
-
-
-
-
         //Loops over all abilities, and runs their onRegistry() logic
         ABILITY_REGISTRY.forEach(ability -> {
             LOGGER.info(ability.equals(ABILITY_EAT_GRASS));
@@ -44,14 +41,26 @@ public class NovaGeneticae implements ModInitializer {
         LOGGER.info(ABILITY_REGISTRY.containsId(new Identifier(MOD_ID, "eat_grass")));
 
         ServerSidePacketRegistry.INSTANCE.register(new Identifier(MOD_ID, "give_ability_packet"), (packetContext, packetByteBuf) -> {
-            NovaGeneticaePlayer ngPlayer = (NovaGeneticaePlayer)packetContext.getPlayer();
+            ServerPlayerEntity player = (ServerPlayerEntity) packetContext.getPlayer();
 
-            LOGGER.info(packetContext.getPlayer() instanceof ClientPlayerEntity);
+            NovaGeneticaePlayer ngPlayer = (NovaGeneticaePlayer)player;
+
+            LOGGER.info("Is it a ClientPlayerEntity: {}", packetContext.getPlayer() instanceof ClientPlayerEntity);
 
             String id = packetByteBuf.readString();
-            ((NovaGeneticaePlayer)packetContext.getPlayer()).giveAbility(new Identifier(id));
-            LOGGER.info("Gave you the ability: {}", id);
-            LOGGER.info(((NovaGeneticaePlayer)packetContext.getPlayer()).getAbilities());
+
+            LOGGER.info("REGISTRY LOOP START");
+
+            ABILITY_REGISTRY.forEach(ability -> {
+                LOGGER.info("Ability: {}", ability);
+            });
+
+            LOGGER.info("REGISTRY LOOP END");
+
+            Ability toAdd = ABILITY_REGISTRY.get(new Identifier(id));
+
+            ngPlayer.getAbilities().add(toAdd);
+            LOGGER.info("Abilities:\n{}", ngPlayer.getAbilities().toString());
         });
 
 

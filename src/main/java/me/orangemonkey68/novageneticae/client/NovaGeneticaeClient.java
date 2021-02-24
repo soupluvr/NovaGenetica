@@ -32,7 +32,7 @@ public class NovaGeneticaeClient implements ClientModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (giveAbility.wasPressed()){
                 PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-                buf.writeString("novagenetica:eat_grass");
+                buf.writeString("novageneticae:eat_grass");
                 ClientPlayNetworkHandler net = MinecraftClient.getInstance().getNetworkHandler();
                 if (net != null) {
                     client.player.sendMessage(new LiteralText("packet sent"), false);
