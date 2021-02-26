@@ -1,9 +1,9 @@
-package me.orangemonkey68.novageneticae.mixin;
+package me.orangemonkey68.novagenetica.mixin;
 
 import com.mojang.authlib.GameProfile;
-import me.orangemonkey68.novageneticae.NovaGeneticae;
-import me.orangemonkey68.novageneticae.NovaGeneticaePlayer;
-import me.orangemonkey68.novageneticae.abilities.Ability;
+import me.orangemonkey68.novagenetica.NovaGenetica;
+import me.orangemonkey68.novagenetica.NovaGeneticaPlayer;
+import me.orangemonkey68.novagenetica.abilities.Ability;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.network.ServerPlayerInteractionManager;
@@ -18,7 +18,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Mixin(ServerPlayerEntity.class)
-public class PlayerMixin implements NovaGeneticaePlayer {
+public class ServerPlayerEntityMixin implements NovaGeneticaPlayer {
 
     //Note to self: check the class you're mixing into for naming conflicts
     private final Set<Ability> ng_abilities = new HashSet<>();
@@ -43,13 +43,12 @@ public class PlayerMixin implements NovaGeneticaePlayer {
      */
     @Override
     public boolean hasAbility(Identifier abilityID) {
-        NovaGeneticae.LOGGER.info(ng_abilities.toString());
+        NovaGenetica.LOGGER.info(ng_abilities.toString());
 
         for (Ability ability : ng_abilities) {
-            Identifier abilityID2 = NovaGeneticae.ABILITY_REGISTRY.getId(ability);
+            Identifier abilityID2 = NovaGenetica.ABILITY_REGISTRY.getId(ability);
 
-            NovaGeneticae.LOGGER.info("ID: {}, Target: {}, Equals (==): {}, Equals(.equals): {}", abilityID2.toString(), abilityID.toString(), abilityID == abilityID2, abilityID.equals(abilityID2) );
-            if(NovaGeneticae.ABILITY_REGISTRY.getId(ability) == abilityID) return true;
+            if(NovaGenetica.ABILITY_REGISTRY.getId(ability) == abilityID) return true;
         }
 
         return false;
@@ -68,9 +67,7 @@ public class PlayerMixin implements NovaGeneticaePlayer {
      */
     @Override
     public void giveAbility(Identifier abilityID) {
-        Ability ability = NovaGeneticae.ABILITY_REGISTRY.get(abilityID);
-
-        NovaGeneticae.LOGGER.info(ability);
+        Ability ability = NovaGenetica.ABILITY_REGISTRY.get(abilityID);
 
         if(ability!= null){
             giveAbility(ability);
@@ -90,9 +87,9 @@ public class PlayerMixin implements NovaGeneticaePlayer {
      */
     @Override
     public void removeAbility(Identifier abilityID) {
-        Ability ability = NovaGeneticae.ABILITY_REGISTRY.get(abilityID);
+        Ability ability = NovaGenetica.ABILITY_REGISTRY.get(abilityID);
         if(ability != null){
-            ng_abilities.remove(NovaGeneticae.ABILITY_REGISTRY.get(abilityID));
+            ng_abilities.remove(ability);
         }
     }
 

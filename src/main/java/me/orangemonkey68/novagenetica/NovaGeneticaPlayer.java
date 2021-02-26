@@ -1,14 +1,11 @@
-package me.orangemonkey68.novageneticae;
+package me.orangemonkey68.novagenetica;
 
-import me.orangemonkey68.novageneticae.abilities.Ability;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import me.orangemonkey68.novagenetica.abilities.Ability;
 import net.minecraft.util.Identifier;
 
-import java.util.List;
 import java.util.Set;
 
-public interface NovaGeneticaePlayer {
+public interface NovaGeneticaPlayer {
     /**
      *
      * @param ability The ability to query.

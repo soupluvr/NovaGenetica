@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "novageneticae",
+  "id": "novagenetica",
   "version": "${version}",
   "name": "NovaGeneticae",
   "description": "Inspired by the Advanced Genetics mod",
@@ -11,18 +11,18 @@
     "repo": "https://www.github.com/orangemonkey68/NovaGeneticae"
   },
   "license": "GPL-3.0",
-  "icon": "assets/NovaGeneticae/icon.png",
+  "icon": "assets/NovaGenetica/icon.png",
   "environment": "*",
   "entrypoints": {
     "client": [
-      "me.orangemonkey68.novageneticae.client.NovaGeneticaeClient"
+      "me.orangemonkey68.novagenetica.client.NovaGeneticaClient"
     ],
     "main": [
-      "me.orangemonkey68.novageneticae.NovaGeneticae"
+      "me.orangemonkey68.novagenetica.NovaGenetica"
     ]
   },
   "mixins": [
-    "NovaGeneticae.mixins.json"
+    "NovaGenetica.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.11.1",
