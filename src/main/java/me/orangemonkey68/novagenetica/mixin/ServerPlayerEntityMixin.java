@@ -43,8 +43,6 @@ public class ServerPlayerEntityMixin implements NovaGeneticaPlayer {
      */
     @Override
     public boolean hasAbility(Identifier abilityID) {
-        NovaGenetica.LOGGER.info(ng_abilities.toString());
-
         for (Ability ability : ng_abilities) {
             Identifier abilityID2 = NovaGenetica.ABILITY_REGISTRY.getId(ability);
 

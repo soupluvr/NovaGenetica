@@ -4,11 +4,14 @@ import me.orangemonkey68.novagenetica.NovaGenetica;
 import me.orangemonkey68.novagenetica.NovaGeneticaEntityType;
 import me.orangemonkey68.novagenetica.abilities.Ability;
 import me.orangemonkey68.novagenetica.abilities.RegistrationHelper;
+import net.minecraft.entity.EntityType;
 import net.minecraft.util.Identifier;
+import org.spongepowered.asm.mixin.Mixin;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@Mixin(EntityType.class)
 public class EntityTypeMixin implements NovaGeneticaEntityType {
     Set<Ability> ng_abilities = new HashSet<>();
 

@@ -1,5 +1,6 @@
 package me.orangemonkey68.novagenetica.commands;
 
+import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
@@ -46,7 +47,7 @@ public class GiveAbilityCommand implements CommandRegistrationCallback {
 //            if(ngPlayer.hasAbility(identifier)) throw new SimpleCommandExceptionType(new TranslatableText("novagenetica.command.already_has_ability", identifier.toString())).create();
 //
 //            ngPlayer.giveAbility(identifier);
-        return 15;
+        return Command.SINGLE_SUCCESS;
     }
 
     private static String[] collectAbilityIdentifiers(Registry<Ability> registry){

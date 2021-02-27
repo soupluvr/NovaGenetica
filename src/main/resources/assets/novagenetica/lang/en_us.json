@@ -1,0 +1,14 @@
+{
+  "item.novagenetica.empty_syringe": "Empty Syringe",
+  "item.novagenetica.filled_syringe": "Filled Syringe: %s",
+
+  "ability.novagenetica.eat_grass": "Eat Grass",
+  "message.novagenetica.ability.eat_grass": "Gosh, that grass looks tasty!",
+
+  "ability.novagenetica.none": "Nothing",
+  "message.novagenetica.ability.none": "I don't think that did anything.",
+
+  "item.novagenetica.filled_syringe.eat_grass": "Syringe of Grass Eating",
+  "item.novagenetica.filled_syringe.none": "Unknown Syringe",
+  "item.novagenetica.filled_syringe.unknown": "Unknown Syringe"
+}

@@ -8,6 +8,8 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -17,7 +19,7 @@ import net.minecraft.world.World;
 public class AbilityEatGrass implements Ability, UseBlockCallback {
     @Override
     public String getTranslationKey() {
-        return "ability.novageneticae.eat_grass";
+        return "ability.novagenetica.eat_grass";
     }
 
     @Override
@@ -46,13 +48,19 @@ public class AbilityEatGrass implements Ability, UseBlockCallback {
 
     }
 
+    /**
+     * This code is run when the player injects the ability into themself.
+     * <b>NOTE:</b> this will <b>always</b> run on the server.
+     */
+    @Override
+    public void onInjection(ServerPlayerEntity entity) {
+        entity.sendMessage(new TranslatableText("message.novagenetica.ability.eat_grass"), false);
+    }
+
     @Override
     public ActionResult interact(PlayerEntity player, World world, Hand hand, BlockHitResult hitResult) {
-        NovaGenetica.LOGGER.info("Function called on side: {}", world.isClient ? "client" : "server");
 
         if(!world.isClient){
-            NovaGenetica.LOGGER.info("We're on the server!");
-
             NovaGeneticaPlayer ngPlayer = (NovaGeneticaPlayer)player;
             BlockPos pos = hitResult.getBlockPos();
             HungerManager hunger = player.getHungerManager();
