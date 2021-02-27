@@ -71,4 +71,12 @@ public class AbilityNone implements Ability {
     public void onInjection(ServerPlayerEntity entity) {
         entity.sendMessage(new TranslatableText("message.novagenetica.ability.none"), false);
     }
+
+    /**
+     * @return the color of this Ability's items in 0xRRGGBB format.
+     */
+    @Override
+    public int getColor() {
+        return 0xFFFFFF;
+    }
 }

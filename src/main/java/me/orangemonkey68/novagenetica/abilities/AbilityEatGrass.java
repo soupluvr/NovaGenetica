@@ -9,6 +9,9 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -57,6 +60,14 @@ public class AbilityEatGrass implements Ability, UseBlockCallback {
         entity.sendMessage(new TranslatableText("message.novagenetica.ability.eat_grass"), false);
     }
 
+    /**
+     * @return the color of this Ability's items in 0xRRGGBB format.
+     */
+    @Override
+    public int getColor() {
+        return 0xFFFFFF;
+    }
+
     @Override
     public ActionResult interact(PlayerEntity player, World world, Hand hand, BlockHitResult hitResult) {
 
@@ -70,6 +81,14 @@ public class AbilityEatGrass implements Ability, UseBlockCallback {
 
                 //TODO: get this hunger value from config
                 hunger.add(5, 6f);
+                ((ServerWorld)world).playSound(
+                        null,
+                        pos,
+                        SoundEvents.BLOCK_GRASS_BREAK,
+                        SoundCategory.BLOCKS,
+                        1f,
+                        1f
+                );
             }
         }
 

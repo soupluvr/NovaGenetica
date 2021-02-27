@@ -4,28 +4,60 @@ import com.mojang.authlib.GameProfile;
 import me.orangemonkey68.novagenetica.NovaGenetica;
 import me.orangemonkey68.novagenetica.NovaGeneticaPlayer;
 import me.orangemonkey68.novagenetica.abilities.Ability;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.network.ServerPlayerInteractionManager;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Mixin(ServerPlayerEntity.class)
 public class ServerPlayerEntityMixin implements NovaGeneticaPlayer {
 
     //Note to self: check the class you're mixing into for naming conflicts
+    @Unique
     private final Set<Ability> ng_abilities = new HashSet<>();
 
     @Inject(method = "<init>", at = @At("TAIL"))
     void injectConstructor(MinecraftServer server, ServerWorld world, GameProfile profile, ServerPlayerInteractionManager interactionManager, CallbackInfo ci) {
         
+    }
+
+    @Inject(method = "readCustomDataFromTag", at = @At("TAIL"))
+    void readAbilitiesFromTag(CompoundTag tag, CallbackInfo ci){
+        CompoundTag subTag = (CompoundTag) tag.get("novagenetica_abilities");
+        if(subTag == null) return;
+
+        for (int i = 0; subTag.contains(String.valueOf(i)); i++) {
+            Ability ability = NovaGenetica.ABILITY_REGISTRY.get(new Identifier(subTag.getString(String.valueOf(i))));
+            if(ability != null){
+                ng_abilities.add(ability);
+            }
+        }
+    }
+
+    @Inject(method = "writeCustomDataToTag", at = @At("TAIL"))
+    void writeAbilitiesToTag(CompoundTag tag, CallbackInfo ci){
+        CompoundTag subTag = new CompoundTag();
+        List<Ability> ngAbilityList = new ArrayList<>(ng_abilities);
+        for (int i = 0; i < ngAbilityList.size(); i++) {
+            Identifier id = NovaGenetica.ABILITY_REGISTRY.getId(ngAbilityList.get(i));
+            if (id != null) {
+                subTag.putString(String.valueOf(i), id.toString());
+            }
+        }
+
+        tag.put("novagenetica_abilities", subTag);
     }
 
     /**

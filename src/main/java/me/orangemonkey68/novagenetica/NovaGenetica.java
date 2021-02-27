@@ -22,8 +22,8 @@ import net.minecraft.util.registry.SimpleRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 
 public class NovaGenetica implements ModInitializer {
     public static final String MOD_ID = "novagenetica";
@@ -43,11 +43,12 @@ public class NovaGenetica implements ModInitializer {
     public void onInitialize() {
         REGISTRATION_HELPER.addItemToGroup(RegistrationHelper.Subsection.START, new ItemStack(EMPTY_SYRINGE_ITEM));
 
+        Map<EntityType<?>, Integer> eatGrassEntityColorMap = new HashMap<>();
+        eatGrassEntityColorMap.put(EntityType.SHEEP, 0xFFFFFF);
         REGISTRATION_HELPER.register(
                 new AbilityEatGrass(),
                 new Identifier(MOD_ID, "eat_grass"),
-                new HashSet<>(Arrays.asList(EntityType.SHEEP)),
-                0xFFFFFF
+                eatGrassEntityColorMap
         );
 
         //Register colorproviders
@@ -62,6 +63,6 @@ public class NovaGenetica implements ModInitializer {
         //TODO: Fix /giveability command
         CommandRegistrationCallback.EVENT.register(new GiveAbilityCommand());
 
-        ITEM_GROUP = REGISTRATION_HELPER.buildGroup(ItemHelper.stackOf(new Identifier(MOD_ID, "none"), 0xed382b, NovaGenetica.FILLED_SYRINGE_ITEM));
+        ITEM_GROUP = REGISTRATION_HELPER.buildGroup(ItemHelper.stackWithAbility(new Identifier(MOD_ID, "none"), NovaGenetica.FILLED_SYRINGE_ITEM));
     }
 }

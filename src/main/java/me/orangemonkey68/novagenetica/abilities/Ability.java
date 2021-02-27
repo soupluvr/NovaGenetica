@@ -68,6 +68,12 @@ public interface Ability {
 
     /**
      *
+     * @return the color of this Ability's items in 0xRRGGBB format.
+     */
+    int getColor();
+
+    /**
+     *
      * @return a set of all entities that can drop items that produce this ability.
      */
     static Set<EntityType<?>> getEntityTypes(Ability ability){

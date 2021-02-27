@@ -23,12 +23,4 @@ public interface NovaGeneticaEntityType {
      */
     void registerAbility(Ability ability);
 
-    //TODO:
-//    default Ability dropAbility(){
-//        Set<Ability> abilities = this.getAbilities();
-//        Random random = new Random();
-//
-//    }
-
-
 }
