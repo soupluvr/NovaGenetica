@@ -38,18 +38,15 @@ public class ServerPlayerEntityMixin implements NovaGeneticaPlayer {
     }
 
     /**
-     * @param abilityID The Identifier of the ability to query
+     * @param abilityToCheckId The Identifier of the ability to query
      * @return {@code true} if the player has the ability, {@code false} if otherwise.
      */
     @Override
-    public boolean hasAbility(Identifier abilityID) {
-        for (Ability ability : ng_abilities) {
-            Identifier abilityID2 = NovaGenetica.ABILITY_REGISTRY.getId(ability);
+    public boolean hasAbility(Identifier abilityToCheckId) {
+        Ability abilityToCheck = NovaGenetica.ABILITY_REGISTRY.get(abilityToCheckId);
+        if(abilityToCheck == null) return false;
 
-            if(NovaGenetica.ABILITY_REGISTRY.getId(ability) == abilityID) return true;
-        }
-
-        return false;
+        return hasAbility(abilityToCheck);
     }
 
     /**

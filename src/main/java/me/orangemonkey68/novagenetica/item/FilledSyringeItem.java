@@ -7,6 +7,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
@@ -33,7 +34,16 @@ public class FilledSyringeItem extends Item {
 
             Identifier abilityId = new Identifier(tag.getString("ability"));
 
-            if(NovaGenetica.ABILITY_REGISTRY.containsId(abilityId) && !ngPlayer.hasAbility(abilityId)){
+            if(ngPlayer.hasAbility(abilityId)){
+                user.sendMessage(new TranslatableText("message.novagenetica.has_ability"), false);
+
+                return TypedActionResult.fail(user.getStackInHand(hand));
+            } else if (!NovaGenetica.ABILITY_REGISTRY.containsId(abilityId)){
+                user.sendMessage(new TranslatableText("message.novagenetica.doesnt_exist"), false);
+                user.setStackInHand(hand, new ItemStack(NovaGenetica.EMPTY_SYRINGE_ITEM));
+
+                return TypedActionResult.fail(user.getStackInHand(hand));
+            } else {
                 ngPlayer.giveAbility(abilityId);
 
                 ItemStack emptySyringe =  new ItemStack(NovaGenetica.EMPTY_SYRINGE_ITEM);
@@ -68,16 +78,6 @@ public class FilledSyringeItem extends Item {
         if(abilityString == null) return null;
 
         return new Identifier(abilityString);
-    }
-
-    @NotNull
-    public static ItemStack stackOf(Identifier abilityId, int color){
-        ItemStack stack = new ItemStack(NovaGenetica.FILLED_SYRINGE_ITEM);
-        CompoundTag tag = stack.getOrCreateTag();
-        tag.putString("ability", abilityId.toString());
-        tag.putInt("color", color);
-        stack.setTag(tag);
-        return stack;
     }
 
     //God I hate lang files

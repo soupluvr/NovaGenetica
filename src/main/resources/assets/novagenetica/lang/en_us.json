@@ -1,6 +1,10 @@
 {
+  "itemGroup.novagenetica.item_group": "Nova Genetica",
+
   "item.novagenetica.empty_syringe": "Empty Syringe",
   "item.novagenetica.filled_syringe": "Filled Syringe: %s",
+  "message.novagenetica.has_ability": "You already have that!",
+  "message.novagenetica.doesnt_exist": "That doesn't exist... lemme take care of that for you.",
 
   "ability.novagenetica.eat_grass": "Eat Grass",
   "message.novagenetica.ability.eat_grass": "Gosh, that grass looks tasty!",
