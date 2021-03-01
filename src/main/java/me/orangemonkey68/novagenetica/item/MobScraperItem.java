@@ -1,7 +1,7 @@
 package me.orangemonkey68.novagenetica.item;
 
-import me.orangemonkey68.novagenetica.NovaGenetica;
 import me.orangemonkey68.novagenetica.NovaGeneticaEntityType;
+import me.orangemonkey68.novagenetica.item.helper.ItemHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;

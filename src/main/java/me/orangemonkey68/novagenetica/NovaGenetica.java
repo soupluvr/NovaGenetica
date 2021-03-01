@@ -7,6 +7,7 @@ import me.orangemonkey68.novagenetica.abilities.AbilityResistance;
 import me.orangemonkey68.novagenetica.abilities.AbilityScareCreepers;
 import me.orangemonkey68.novagenetica.commands.GiveAbilityCommand;
 import me.orangemonkey68.novagenetica.item.*;
+import me.orangemonkey68.novagenetica.item.helper.ItemHelper;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ModInitializer;
@@ -24,8 +25,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 public class NovaGenetica implements ModInitializer {
     public static final String MOD_ID = "novagenetica";
@@ -35,7 +34,7 @@ public class NovaGenetica implements ModInitializer {
     public static final Registry<Ability> ABILITY_REGISTRY = new SimpleRegistry<>(ABILITY_KEY, Lifecycle.stable());
 
     public static ItemGroup ITEM_GROUP;
-    public static final Item EMPTY_SYRINGE_ITEM = Registry.register(Registry.ITEM, new Identifier(MOD_ID, "empty_syringe"), new Item(new Item.Settings().maxCount(16)));
+    public static final Item EMPTY_SYRINGE_ITEM = Registry.register(Registry.ITEM, new Identifier(MOD_ID, "empty_syringe"), new EmptySyringeItem(new Item.Settings().maxCount(16)));
     public static final Item FILLED_SYRINGE_ITEM = Registry.register(Registry.ITEM, new Identifier(MOD_ID, "filled_syringe"), new FilledSyringeItem(new Item.Settings().maxCount(1)));
     public static final Item GENE_ITEM = Registry.register(Registry.ITEM, new Identifier(MOD_ID, "gene"), new GeneItem(new Item.Settings().maxCount(1)));
     public static final Item MOB_FLAKES = Registry.register(Registry.ITEM, new Identifier(MOD_ID, "mob_flakes"), new MobFlakesItem(new Item.Settings().maxCount(64)));

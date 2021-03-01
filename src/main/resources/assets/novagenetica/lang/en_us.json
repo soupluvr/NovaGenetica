@@ -4,6 +4,7 @@
   "item.novagenetica.empty_syringe": "Empty Syringe",
   "message.novagenetica.has_ability": "You already have that!",
   "message.novagenetica.doesnt_exist": "That doesn't exist... lemme take care of that for you.",
+  "message.novagenetica.filled_syringe.bad_idea": "It's probably a bad idea to inject yourself with someone else's blood.",
 
   "ability.novagenetica.eat_grass": "Eat Grass",
   "message.novagenetica.ability.eat_grass": "Gosh, that grass looks tasty!",
@@ -11,18 +12,21 @@
   "ability.novagenetica.none": "Nothing",
   "message.novagenetica.ability.none": "I don't think that did anything.",
 
+  "ability.novagenetica.resistance": "Resistance",
+  "message.novagenetica.ability.resistance": "I feel really tough all of a sudden.",
+
+  "ability.novagenetica.scare_creepers": "Scare Creepers",
+  "message.novagenetica.ability.scare_creepers": "Creepers don't look so scary anymore",
+
   "item.filled_syringe.novagenetica:eat_grass": "Syringe of Grass Eating",
   "item.filled_syringe.novagenetica:resistance": "Syringe of Resistance",
   "item.filled_syringe.novagenetica:none": "Unknown Syringe",
   "item.filled_syringe.unknown": "Unknown Syringe",
 
-  "item.gene.unknown": "Unknown Gene",
-  "item.gene.minecraft:zombie": "Zombie Gene",
-  "item.gene.minecraft:sheep": "Sheep Gene",
+  "item.novagenetica.complete_gene.unknown": "Unknown Gene",
+  "item.genetica.mob_flakes.unknown": "Unknown Mob Flakes",
 
-  "item.mob_flakes.minecraft:sheep": "Sheep Flakes",
-  "item.mob_flakes.minecraft:zombie": "Zombie Flakes",
-
-  "item.complete_gene.novagenetica:eat_grass": "Complete Eat Grass Gene",
-  "item.complete_gene.novagenetica:resistance": "Complete Resistance Gene"
+  "item.novagenetica.gene": "%s Gene",
+  "item.novagenetica.complete_gene": "Complete %s Gene",
+  "item.genetica.mob_flakes": "%s Flakes"
 }

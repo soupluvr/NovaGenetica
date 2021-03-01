@@ -3,10 +3,13 @@ package me.orangemonkey68.novagenetica.item;
 import me.orangemonkey68.novagenetica.NovaGenetica;
 import me.orangemonkey68.novagenetica.NovaGeneticaPlayer;
 import me.orangemonkey68.novagenetica.abilities.Ability;
+import me.orangemonkey68.novagenetica.item.helper.NBTHelper;
+import net.minecraft.command.argument.ItemSlotArgumentType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -14,6 +17,9 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Set;
+import java.util.UUID;
 
 public class FilledSyringeItem extends Item {
 
@@ -32,27 +38,63 @@ public class FilledSyringeItem extends Item {
             CompoundTag tag = stack.getTag();
             if (tag == null) return TypedActionResult.fail(stack);
 
-            Identifier abilityId = new Identifier(tag.getString("ability"));
-
-            if(ngPlayer.hasAbility(abilityId)){
-                user.sendMessage(new TranslatableText("message.novagenetica.has_ability"), false);
-
-                return TypedActionResult.fail(user.getStackInHand(hand));
-            } else if (!NovaGenetica.ABILITY_REGISTRY.containsId(abilityId)){
-                user.sendMessage(new TranslatableText("message.novagenetica.doesnt_exist"), false);
-                user.setStackInHand(hand, new ItemStack(NovaGenetica.EMPTY_SYRINGE_ITEM));
-
-                return TypedActionResult.fail(user.getStackInHand(hand));
+            if(tag.contains("playerAbilities")){
+                return handlePlayerSyringe(user, stack, hand);
+            } else if (tag.contains("ability")){
+                return handleAbilitySyringe(user, stack, hand);
             } else {
-                ngPlayer.giveAbility(abilityId);
-
-                ItemStack emptySyringe =  new ItemStack(NovaGenetica.EMPTY_SYRINGE_ITEM);
-                user.setStackInHand(hand, emptySyringe);
-
-                return TypedActionResult.success(emptySyringe);
+                return TypedActionResult.fail(stack);
             }
         }
         return TypedActionResult.fail(user.getStackInHand(hand));
+    }
+
+    //Handles a syringe that gives the player one ability
+    TypedActionResult<ItemStack> handleAbilitySyringe(PlayerEntity user, ItemStack stack, Hand hand){
+        CompoundTag tag = stack.getTag();
+        if (tag == null) return TypedActionResult.fail(stack);
+
+        NovaGeneticaPlayer ngPlayer = (NovaGeneticaPlayer) user;
+        Identifier abilityId = new Identifier(tag.getString("ability"));
+
+        if(ngPlayer.hasAbility(abilityId)){
+            user.sendMessage(new TranslatableText("message.novagenetica.has_ability"), false);
+
+            return TypedActionResult.fail(user.getStackInHand(hand));
+        } else if (!NovaGenetica.ABILITY_REGISTRY.containsId(abilityId)){
+            user.sendMessage(new TranslatableText("message.novagenetica.doesnt_exist"), false);
+            user.setStackInHand(hand, new ItemStack(NovaGenetica.EMPTY_SYRINGE_ITEM));
+
+            return TypedActionResult.fail(user.getStackInHand(hand));
+        } else {
+            ngPlayer.giveAbility(abilityId);
+
+            ItemStack emptySyringe =  new ItemStack(NovaGenetica.EMPTY_SYRINGE_ITEM);
+            user.setStackInHand(hand, emptySyringe);
+
+            return TypedActionResult.success(emptySyringe);
+        }
+    }
+
+    //Handles a syringe filled with a player's blood
+    TypedActionResult<ItemStack> handlePlayerSyringe(PlayerEntity user, ItemStack stack, Hand hand){
+        NovaGeneticaPlayer ngPlayer = (NovaGeneticaPlayer)user;
+
+        CompoundTag tag = stack.getTag();
+        if(tag == null) return TypedActionResult.fail(stack);
+        UUID uuid = tag.getUuid("uuid");
+        CompoundTag subTag = (CompoundTag) tag.get("playerAbilities");
+        ItemStack emptySyringe = new ItemStack(NovaGenetica.EMPTY_SYRINGE_ITEM);
+
+        if(uuid.equals(user.getUuid()) && subTag != null){
+            Set<Ability> abilities = NBTHelper.getAbilitySetFromTag(subTag);
+            abilities.forEach(ngPlayer::giveAbility);
+        } else {
+            user.sendMessage(new TranslatableText("message.novagenetica.filled_syringe.bad_idea"), false);
+        }
+
+        user.setStackInHand(hand, emptySyringe);
+        return TypedActionResult.success(emptySyringe, true);
     }
 
     @Nullable
@@ -80,7 +122,6 @@ public class FilledSyringeItem extends Item {
         return new Identifier(abilityString);
     }
 
-    //God I hate lang files
     @Override
     public String getTranslationKey(ItemStack stack) {
         CompoundTag tag = stack.getTag();
