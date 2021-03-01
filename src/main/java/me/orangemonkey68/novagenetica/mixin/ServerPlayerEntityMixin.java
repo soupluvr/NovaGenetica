@@ -4,6 +4,8 @@ import com.mojang.authlib.GameProfile;
 import me.orangemonkey68.novagenetica.NovaGenetica;
 import me.orangemonkey68.novagenetica.NovaGeneticaPlayer;
 import me.orangemonkey68.novagenetica.abilities.Ability;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -122,5 +124,16 @@ public class ServerPlayerEntityMixin implements NovaGeneticaPlayer {
 
     public Set<Ability> getAbilities() {
         return ng_abilities;
+    }
+
+    @Inject(method = "tick", at = @At("TAIL"))
+    void onTick(CallbackInfo ci){
+        //call ability onTick() functions
+        ng_abilities.forEach(ability -> ability.onTick((ServerPlayerEntity)(Object)this));
+    }
+
+    @Inject(method = "onDeath", at = @At("TAIL"))
+    void onDeath(DamageSource source, CallbackInfo ci){
+        ng_abilities.clear();
     }
 }

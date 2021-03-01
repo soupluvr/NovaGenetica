@@ -3,11 +3,9 @@ package me.orangemonkey68.novagenetica;
 import com.mojang.serialization.Lifecycle;
 import me.orangemonkey68.novagenetica.abilities.Ability;
 import me.orangemonkey68.novagenetica.abilities.AbilityEatGrass;
-import me.orangemonkey68.novagenetica.abilities.RegistrationHelper;
+import me.orangemonkey68.novagenetica.abilities.AbilityResistance;
 import me.orangemonkey68.novagenetica.commands.GiveAbilityCommand;
-import me.orangemonkey68.novagenetica.item.FilledSyringeItem;
-import me.orangemonkey68.novagenetica.item.ItemHelper;
-import me.orangemonkey68.novagenetica.item.NovaGeneticaItemColorProvider;
+import me.orangemonkey68.novagenetica.item.*;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
@@ -35,8 +33,9 @@ public class NovaGenetica implements ModInitializer {
     public static ItemGroup ITEM_GROUP;
     public static final Item EMPTY_SYRINGE_ITEM = Registry.register(Registry.ITEM, new Identifier(MOD_ID, "empty_syringe"), new Item(new Item.Settings().maxCount(16)));
     public static final Item FILLED_SYRINGE_ITEM = Registry.register(Registry.ITEM, new Identifier(MOD_ID, "filled_syringe"), new FilledSyringeItem(new Item.Settings().maxCount(1)));
-    public static final Item GENE_ITEM = Registry.register(Registry.ITEM, new Identifier(MOD_ID, "gene"), new Item(new Item.Settings().maxCount(1)));
-    public static final Item MOB_FLAKES = Registry.register(Registry.ITEM, new Identifier(MOD_ID, "mob_flakes"), new Item(new Item.Settings().maxCount(64)));
+    public static final Item GENE_ITEM = Registry.register(Registry.ITEM, new Identifier(MOD_ID, "gene"), new GeneItem(new Item.Settings().maxCount(1)));
+    public static final Item MOB_FLAKES = Registry.register(Registry.ITEM, new Identifier(MOD_ID, "mob_flakes"), new MobFlakesItem(new Item.Settings().maxCount(64)));
+    public static final Item COMPLETE_GENE_ITEM = Registry.register(Registry.ITEM, new Identifier(MOD_ID, "complete_gene"), new CompleteGeneItem(new Item.Settings().maxCount(1)));
 
     private static final RegistrationHelper REGISTRATION_HELPER = new RegistrationHelper(new Identifier(MOD_ID, "item_group"));
     @Override
@@ -51,10 +50,20 @@ public class NovaGenetica implements ModInitializer {
                 eatGrassEntityColorMap
         );
 
+        Map<EntityType<?>, Integer> resistanceEntityColorMap = new HashMap<>();
+        resistanceEntityColorMap.put(EntityType.ZOMBIE, 0x276339);
+        resistanceEntityColorMap.put(EntityType.ZOMBIE_VILLAGER, 0x276339);
+        REGISTRATION_HELPER.register(
+                new AbilityResistance(),
+                new Identifier(MOD_ID, "resistance"),
+                resistanceEntityColorMap
+        );
+
         //Register colorproviders
-        ColorProviderRegistry.ITEM.register(new NovaGeneticaItemColorProvider(FILLED_SYRINGE_ITEM), FILLED_SYRINGE_ITEM);
-        ColorProviderRegistry.ITEM.register(new NovaGeneticaItemColorProvider(GENE_ITEM), GENE_ITEM);
-        ColorProviderRegistry.ITEM.register(new NovaGeneticaItemColorProvider(MOB_FLAKES), MOB_FLAKES);
+        ColorProviderRegistry.ITEM.register(new NovaGeneticaItemColorProvider(), FILLED_SYRINGE_ITEM);
+        ColorProviderRegistry.ITEM.register(new NovaGeneticaItemColorProvider(), GENE_ITEM);
+        ColorProviderRegistry.ITEM.register(new NovaGeneticaItemColorProvider(), MOB_FLAKES);
+        ColorProviderRegistry.ITEM.register(new NovaGeneticaItemColorProvider(), COMPLETE_GENE_ITEM);
 
         //Loops over all abilities, and runs their onRegistry() logic
         ABILITY_REGISTRY.forEach(Ability::onRegistryServer);
@@ -63,6 +72,6 @@ public class NovaGenetica implements ModInitializer {
         //TODO: Fix /giveability command
         CommandRegistrationCallback.EVENT.register(new GiveAbilityCommand());
 
-        ITEM_GROUP = REGISTRATION_HELPER.buildGroup(ItemHelper.stackWithAbility(new Identifier(MOD_ID, "none"), NovaGenetica.FILLED_SYRINGE_ITEM));
+        ITEM_GROUP = REGISTRATION_HELPER.buildGroup(ItemHelper.getCompleteGene(new Identifier(MOD_ID, "none")));
     }
 }

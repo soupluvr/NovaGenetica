@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class FilledSyringeItem extends Item {
 
-    private static final String UNKNOWN_TRANSLATION_KEY = "item.novagenetica.filled_syringe.unknown";
+    private static final String UNKNOWN_TRANSLATION_KEY = "item.filled_syringe.unknown";
 
     public FilledSyringeItem(Settings settings) {
         super(settings);
@@ -94,7 +94,7 @@ public class FilledSyringeItem extends Item {
         if(ability == null) return UNKNOWN_TRANSLATION_KEY;
         String[] splitId = id.split(":");
 
-        return "item." + splitId[0] + ".filled_syringe." + splitId[1];
+        return "item.filled_syringe." + id;
     }
 }
 

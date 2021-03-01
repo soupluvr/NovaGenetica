@@ -1,7 +1,9 @@
-package me.orangemonkey68.novagenetica.abilities;
+package me.orangemonkey68.novagenetica;
 
 import me.orangemonkey68.novagenetica.NovaGenetica;
 import me.orangemonkey68.novagenetica.NovaGeneticaEntityType;
+import me.orangemonkey68.novagenetica.abilities.Ability;
+import me.orangemonkey68.novagenetica.abilities.AbilityValidator;
 import me.orangemonkey68.novagenetica.item.ItemHelper;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.entity.EntityType;
@@ -35,7 +37,8 @@ public class RegistrationHelper {
         //Set up map
         itemMap.put(Subsection.START, new ArrayList<>());
         itemMap.put(Subsection.SYRINGE, new ArrayList<>());
-        itemMap.put(Subsection.GENE, new ArrayList<>());
+        itemMap.put(Subsection.COMPLETE_GENE, new ArrayList<>());
+        itemMap.put(Subsection.INCOMPLETE_GENE, new ArrayList<>());
         itemMap.put(Subsection.MOB_FLAKES, new ArrayList<>());
         itemMap.put(Subsection.END, new ArrayList<>());
     }
@@ -55,7 +58,7 @@ public class RegistrationHelper {
         Registry.register(ABILITY_REGISTRY, abilityId, ability);
 
         //Create and put syringe in itemMap
-        ItemStack syringe = ItemHelper.stackWithAbility(abilityId, NovaGenetica.FILLED_SYRINGE_ITEM);
+        ItemStack syringe = ItemHelper.getSyringe(abilityId);
         addItemToGroup(Subsection.SYRINGE, syringe);
 
         //Genes need all of the Abilities to be registered, so they're registered in the build function
@@ -67,12 +70,12 @@ public class RegistrationHelper {
 
             if(!ENTITY_TYPE_COLOR_MAP.containsKey(type)){
                 ENTITY_TYPE_COLOR_MAP.put(type, mobColor);
-                addItemToGroup(Subsection.MOB_FLAKES, ItemHelper.stackWithEntityType(type, NovaGenetica.MOB_FLAKES));
+                addItemToGroup(Subsection.INCOMPLETE_GENE, ItemHelper.getGene(Registry.ENTITY_TYPE.getId(type)));
             }
+
         });
 
-
-        addItemToGroup(Subsection.GENE, ItemHelper.stackWithAbility(abilityId, NovaGenetica.GENE_ITEM));
+        addItemToGroup(Subsection.COMPLETE_GENE, ItemHelper.getCompleteGene(abilityId));
 
         //Adds to Ability.ABILITY_ENTITY_MAP
         Ability.ABILITY_ENTITY_MAP.put(ability, entityTypeColorMap.keySet());
@@ -101,7 +104,8 @@ public class RegistrationHelper {
         List<ItemStack> totalList = Stream.of(
                 itemMap.get(Subsection.START),
                 itemMap.get(Subsection.SYRINGE),
-                itemMap.get(Subsection.GENE),
+                itemMap.get(Subsection.COMPLETE_GENE),
+                itemMap.get(Subsection.INCOMPLETE_GENE),
                 itemMap.get(Subsection.MOB_FLAKES),
                 itemMap.get(Subsection.END)
         ).flatMap(Collection::stream).collect(Collectors.toList());
@@ -114,7 +118,8 @@ public class RegistrationHelper {
     public enum Subsection {
         START,
         SYRINGE,
-        GENE,
+        COMPLETE_GENE,
+        INCOMPLETE_GENE,
         MOB_FLAKES,
         END
     }

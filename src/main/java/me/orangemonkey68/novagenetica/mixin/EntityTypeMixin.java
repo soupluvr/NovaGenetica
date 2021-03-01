@@ -3,7 +3,7 @@ package me.orangemonkey68.novagenetica.mixin;
 import me.orangemonkey68.novagenetica.NovaGenetica;
 import me.orangemonkey68.novagenetica.NovaGeneticaEntityType;
 import me.orangemonkey68.novagenetica.abilities.Ability;
-import me.orangemonkey68.novagenetica.abilities.RegistrationHelper;
+import me.orangemonkey68.novagenetica.RegistrationHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;

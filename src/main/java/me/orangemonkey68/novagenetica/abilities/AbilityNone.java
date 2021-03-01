@@ -65,11 +65,21 @@ public class AbilityNone implements Ability {
      * This code is run when the player injects the ability into themself.
      * <b>NOTE:</b> this will <b>always</b> run on the server.
      *
-     * @param entity The player who just injected
+     * @param player The player who just injected
      */
     @Override
-    public void onInjection(ServerPlayerEntity entity) {
-        entity.sendMessage(new TranslatableText("message.novagenetica.ability.none"), false);
+    public void onInjection(ServerPlayerEntity player) {
+        player.sendMessage(new TranslatableText("message.novagenetica.ability.none"), false);
+    }
+
+    /**
+     * This code is executes every tick that a player has an ability.
+     *
+     * @param player The player the ability is executing on
+     */
+    @Override
+    public void onTick(ServerPlayerEntity player) {
+
     }
 
     /**

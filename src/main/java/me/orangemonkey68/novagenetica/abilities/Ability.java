@@ -64,7 +64,13 @@ public interface Ability {
      * This code is run when the player injects the ability into themself.
      * <b>NOTE:</b> this will <b>always</b> run on the server.
      */
-    void onInjection(ServerPlayerEntity entity);
+    void onInjection(ServerPlayerEntity player);
+
+    /**
+     * This code is executes every tick that a player has an ability.
+     * @param player The player the ability is executing on
+     */
+    void onTick(ServerPlayerEntity player);
 
     /**
      *

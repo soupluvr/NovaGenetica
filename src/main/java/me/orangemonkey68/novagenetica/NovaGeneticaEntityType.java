@@ -3,7 +3,6 @@ package me.orangemonkey68.novagenetica;
 import me.orangemonkey68.novagenetica.abilities.Ability;
 import net.minecraft.util.Identifier;
 
-import java.util.Random;
 import java.util.Set;
 
 public interface NovaGeneticaEntityType {
@@ -18,7 +17,7 @@ public interface NovaGeneticaEntityType {
     boolean canGiveAbility(Identifier id);
 
     /**
-     * <b>NOTE:</b> do not try to register abilities after initialization, the genes will never drop. This method is intended for use in the {@link me.orangemonkey68.novagenetica.abilities.RegistrationHelper} class
+     * <b>NOTE:</b> do not try to register abilities after initialization, the genes will never drop. This method is intended for use in the {@link RegistrationHelper} class
      *
      */
     void registerAbility(Ability ability);

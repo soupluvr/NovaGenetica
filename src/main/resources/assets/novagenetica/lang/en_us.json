@@ -2,7 +2,6 @@
   "itemGroup.novagenetica.item_group": "Nova Genetica",
 
   "item.novagenetica.empty_syringe": "Empty Syringe",
-  "item.novagenetica.filled_syringe": "Filled Syringe: %s",
   "message.novagenetica.has_ability": "You already have that!",
   "message.novagenetica.doesnt_exist": "That doesn't exist... lemme take care of that for you.",
 
@@ -12,7 +11,18 @@
   "ability.novagenetica.none": "Nothing",
   "message.novagenetica.ability.none": "I don't think that did anything.",
 
-  "item.novagenetica.filled_syringe.eat_grass": "Syringe of Grass Eating",
-  "item.novagenetica.filled_syringe.none": "Unknown Syringe",
-  "item.novagenetica.filled_syringe.unknown": "Unknown Syringe"
+  "item.filled_syringe.novagenetica:eat_grass": "Syringe of Grass Eating",
+  "item.filled_syringe.novagenetica:resistance": "Syringe of Resistance",
+  "item.filled_syringe.novagenetica:none": "Unknown Syringe",
+  "item.filled_syringe.unknown": "Unknown Syringe",
+
+  "item.gene.unknown": "Unknown Gene",
+  "item.gene.minecraft:zombie": "Zombie Gene",
+  "item.gene.minecraft:sheep": "Sheep Gene",
+
+  "item.mob_flakes.minecraft:sheep": "Sheep Flakes",
+  "item.mob_flakes.minecraft:zombie": "Zombie Flakes",
+
+  "item.complete_gene.novagenetica:eat_grass": "Complete Eat Grass Gene",
+  "item.complete_gene.novagenetica:resistance": "Complete Resistance Gene"
 }

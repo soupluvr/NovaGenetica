@@ -1,11 +1,8 @@
 package me.orangemonkey68.novagenetica.abilities;
 
-import com.google.common.collect.ImmutableSet;
-import me.orangemonkey68.novagenetica.NovaGenetica;
 import me.orangemonkey68.novagenetica.NovaGeneticaPlayer;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.block.Blocks;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -56,8 +53,18 @@ public class AbilityEatGrass implements Ability, UseBlockCallback {
      * <b>NOTE:</b> this will <b>always</b> run on the server.
      */
     @Override
-    public void onInjection(ServerPlayerEntity entity) {
-        entity.sendMessage(new TranslatableText("message.novagenetica.ability.eat_grass"), false);
+    public void onInjection(ServerPlayerEntity player) {
+        player.sendMessage(new TranslatableText("message.novagenetica.ability.eat_grass"), false);
+    }
+
+    /**
+     * This code is executes every tick that a player has an ability.
+     *
+     * @param player The player the ability is executing on
+     */
+    @Override
+    public void onTick(ServerPlayerEntity player) {
+
     }
 
     /**
@@ -81,7 +88,7 @@ public class AbilityEatGrass implements Ability, UseBlockCallback {
 
                 //TODO: get this hunger value from config
                 hunger.add(5, 6f);
-                ((ServerWorld)world).playSound(
+                world.playSound(
                         null,
                         pos,
                         SoundEvents.BLOCK_GRASS_BREAK,

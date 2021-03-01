@@ -21,7 +21,7 @@ public class MobScraperItem extends Item {
             EntityType<?> entityType = entity.getType();
             NovaGeneticaEntityType ngEntityType = (NovaGeneticaEntityType) entityType;
             if(!ngEntityType.getAbilities().isEmpty()){
-                ItemStack stackToDrop = ItemHelper.stackWithEntityType(entityType, NovaGenetica.MOB_FLAKES);
+                ItemStack stackToDrop = ItemHelper.getMobFlakes(entityType);
             }
         }
 
