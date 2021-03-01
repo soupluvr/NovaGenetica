@@ -129,7 +129,10 @@ public class ServerPlayerEntityMixin implements NovaGeneticaPlayer {
     @Inject(method = "tick", at = @At("TAIL"))
     void onTick(CallbackInfo ci){
         //call ability onTick() functions
-        ng_abilities.forEach(ability -> ability.onTick((ServerPlayerEntity)(Object)this));
+        ng_abilities.forEach(ability -> {
+            if (!ability.isEnabled()) return;
+            ability.onTick((ServerPlayerEntity)(Object)this);
+        });
     }
 
     @Inject(method = "onDeath", at = @At("TAIL"))

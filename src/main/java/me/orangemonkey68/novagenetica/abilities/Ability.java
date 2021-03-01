@@ -48,7 +48,7 @@ public interface Ability {
      * It's recommended to check a config here.
      * @return Whether or not the player should be allowed to get this Ability or the items to make it.
      */
-    boolean isAllowed();
+    boolean isEnabled();
 
     /**
      * This code is run in {@link NovaGenetica#onInitialize()}, and it's recommended that register any event callbacks and server packet receivers in this function.

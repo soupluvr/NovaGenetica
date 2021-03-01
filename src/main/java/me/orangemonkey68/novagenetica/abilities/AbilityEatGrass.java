@@ -1,5 +1,6 @@
 package me.orangemonkey68.novagenetica.abilities;
 
+import me.orangemonkey68.novagenetica.NovaGenetica;
 import me.orangemonkey68.novagenetica.NovaGeneticaPlayer;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.block.Blocks;
@@ -33,9 +34,8 @@ public class AbilityEatGrass implements Ability, UseBlockCallback {
     }
 
     @Override
-    public boolean isAllowed() {
-        //TODO: Config
-        return true;
+    public boolean isEnabled() {
+        return NovaGenetica.getConfig().abilitiesConfig.eat_grass;
     }
 
     @Override

@@ -115,6 +115,24 @@ public class RegistrationHelper {
                 .build();
     }
 
+    /**
+     * Generates a map of {@link EntityType}s and colors for use in {@link #register(Ability, Identifier, Map)}
+     * @param types a {@link List} of {@link EntityType}s
+     * @param colors a {@link List} of colors, represented in {@code 0xRRGGBB} format
+     * @return a {@link HashMap} of each EntityType : int pair
+     */
+    public Map<EntityType<?>, Integer> generateEntityTypeColorMap (List<EntityType<?>> types, List<Integer> colors) {
+        if(types.size() != colors.size()) throw new IllegalArgumentException("The EntityType and Color list must be the same length.");
+
+        HashMap<EntityType<?>, Integer> entityTypeColorMap = new HashMap<>();
+
+        for (int i = 0; i < types.size(); i++) {
+            entityTypeColorMap.put(types.get(i), colors.get(i));
+        }
+
+        return entityTypeColorMap;
+    }
+
     public enum Subsection {
         START,
         SYRINGE,

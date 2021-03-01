@@ -40,6 +40,6 @@ public abstract class CreeperEntityMixin extends HostileEntity {
 
         //Raw use FleeEntityGoal because that's what CreeperEntity does
         //noinspection unchecked
-        goalSelector.add(3, new FleeEntityGoal(this, ServerPlayerEntity.class, scare_creepers_predicate, 6.0F, 1.0D, 1.2D, EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR));
+        goalSelector.add(0, new FleeEntityGoal(this, ServerPlayerEntity.class, scare_creepers_predicate, 10.0F, 1.0D, 1.2D, EntityPredicates.EXCEPT_CREATIVE_OR_SPECTATOR));
     }
 }

@@ -4,8 +4,11 @@ import com.mojang.serialization.Lifecycle;
 import me.orangemonkey68.novagenetica.abilities.Ability;
 import me.orangemonkey68.novagenetica.abilities.AbilityEatGrass;
 import me.orangemonkey68.novagenetica.abilities.AbilityResistance;
+import me.orangemonkey68.novagenetica.abilities.AbilityScareCreepers;
 import me.orangemonkey68.novagenetica.commands.GiveAbilityCommand;
 import me.orangemonkey68.novagenetica.item.*;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
@@ -20,6 +23,7 @@ import net.minecraft.util.registry.SimpleRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,24 +44,11 @@ public class NovaGenetica implements ModInitializer {
     private static final RegistrationHelper REGISTRATION_HELPER = new RegistrationHelper(new Identifier(MOD_ID, "item_group"));
     @Override
     public void onInitialize() {
+        AutoConfig.register(NovaGeneticaConfig.class, Toml4jConfigSerializer::new);
+
         REGISTRATION_HELPER.addItemToGroup(RegistrationHelper.Subsection.START, new ItemStack(EMPTY_SYRINGE_ITEM));
 
-        Map<EntityType<?>, Integer> eatGrassEntityColorMap = new HashMap<>();
-        eatGrassEntityColorMap.put(EntityType.SHEEP, 0xFFFFFF);
-        REGISTRATION_HELPER.register(
-                new AbilityEatGrass(),
-                new Identifier(MOD_ID, "eat_grass"),
-                eatGrassEntityColorMap
-        );
-
-        Map<EntityType<?>, Integer> resistanceEntityColorMap = new HashMap<>();
-        resistanceEntityColorMap.put(EntityType.ZOMBIE, 0x276339);
-        resistanceEntityColorMap.put(EntityType.ZOMBIE_VILLAGER, 0x276339);
-        REGISTRATION_HELPER.register(
-                new AbilityResistance(),
-                new Identifier(MOD_ID, "resistance"),
-                resistanceEntityColorMap
-        );
+        registerAbilities();
 
         //Register colorproviders
         ColorProviderRegistry.ITEM.register(new NovaGeneticaItemColorProvider(), FILLED_SYRINGE_ITEM);
@@ -73,5 +64,38 @@ public class NovaGenetica implements ModInitializer {
         CommandRegistrationCallback.EVENT.register(new GiveAbilityCommand());
 
         ITEM_GROUP = REGISTRATION_HELPER.buildGroup(ItemHelper.getCompleteGene(new Identifier(MOD_ID, "none")));
+    }
+
+    void registerAbilities(){
+        REGISTRATION_HELPER.register(
+                new AbilityEatGrass(),
+                new Identifier(MOD_ID, "eat_grass"),
+                REGISTRATION_HELPER.generateEntityTypeColorMap(
+                        Arrays.asList(EntityType.SHEEP),
+                        Arrays.asList(0xFFFFFF)
+                )
+        );
+
+        REGISTRATION_HELPER.register(
+                new AbilityResistance(),
+                new Identifier(MOD_ID, "resistance"),
+                REGISTRATION_HELPER.generateEntityTypeColorMap(
+                        Arrays.asList(EntityType.ZOMBIE, EntityType.ZOMBIE_VILLAGER),
+                        Arrays.asList(0x276339, 0x276339)
+                )
+        );
+
+        REGISTRATION_HELPER.register(
+                new AbilityScareCreepers(),
+                new Identifier(MOD_ID, "scare_creepers"),
+                REGISTRATION_HELPER.generateEntityTypeColorMap(
+                        Arrays.asList(EntityType.OCELOT, EntityType.CAT),
+                        Arrays.asList(0xf2c26d, 0xf2ad35)
+                )
+        );
+    }
+
+    public static NovaGeneticaConfig getConfig(){
+        return AutoConfig.getConfigHolder(NovaGeneticaConfig.class).get();
     }
 }

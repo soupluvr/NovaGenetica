@@ -41,7 +41,7 @@ public class AbilityNone implements Ability {
      * @return Whether or not the player should be allowed to get this Ability or the items to make it.
      */
     @Override
-    public boolean isAllowed() {
+    public boolean isEnabled() {
         return true;
     }
 

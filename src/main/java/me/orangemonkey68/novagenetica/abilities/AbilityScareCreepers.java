@@ -1,31 +1,30 @@
 package me.orangemonkey68.novagenetica.abilities;
 
 import me.orangemonkey68.novagenetica.NovaGenetica;
-import me.orangemonkey68.novagenetica.client.NovaGeneticaClient;
-import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.TranslatableText;
 
-public class AbilityResistance implements Ability{
+public class AbilityScareCreepers implements Ability {
 
     @Override
     public String getTranslationKey() {
-        return "ability.novagenetica.resistance";
+        return "ability.novagenetica.scare_creepers";
     }
 
     @Override
     public int getRarity() {
-        return 23;
+        return 2;
     }
 
     @Override
     public int genesNeededToComplete() {
-        return 12;
+        return 4;
     }
 
     @Override
     public boolean isEnabled() {
-        return NovaGenetica.getConfig().abilitiesConfig.resistance;
+        return NovaGenetica.getConfig().abilitiesConfig.scare_creepers;
     }
 
     @Override
@@ -40,19 +39,16 @@ public class AbilityResistance implements Ability{
 
     @Override
     public void onInjection(ServerPlayerEntity player) {
-
+        player.sendMessage(new TranslatableText("message.novagenetica.ability.scare_creepers"), false);
     }
 
     @Override
     public void onTick(ServerPlayerEntity player) {
-        player.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 20, 0, true, true));
+
     }
 
-    /**
-     * @return the color of this Ability's items in 0xRRGGBB format.
-     */
     @Override
     public int getColor() {
-        return 0x276339;
+        return 0xf2ad35;
     }
 }
