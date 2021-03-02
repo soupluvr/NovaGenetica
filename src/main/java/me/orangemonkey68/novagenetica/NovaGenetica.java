@@ -8,15 +8,18 @@ import me.orangemonkey68.novagenetica.abilities.AbilityScareCreepers;
 import me.orangemonkey68.novagenetica.commands.GiveAbilityCommand;
 import me.orangemonkey68.novagenetica.item.*;
 import me.orangemonkey68.novagenetica.item.helper.ItemHelper;
+import me.orangemonkey68.novagenetica.item.helper.RegistrationHelper;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
@@ -25,10 +28,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 public class NovaGenetica implements ModInitializer {
     public static final String MOD_ID = "novagenetica";
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
+    public static MinecraftServer SERVER_INSTANCE;
 
     public static final RegistryKey<Registry<Ability>> ABILITY_KEY = RegistryKey.ofRegistry(new Identifier(MOD_ID, "ability"));
     public static final Registry<Ability> ABILITY_REGISTRY = new SimpleRegistry<>(ABILITY_KEY, Lifecycle.stable());
@@ -46,6 +51,8 @@ public class NovaGenetica implements ModInitializer {
         AutoConfig.register(NovaGeneticaConfig.class, Toml4jConfigSerializer::new);
 
         REGISTRATION_HELPER.addItemToGroup(RegistrationHelper.Subsection.START, new ItemStack(EMPTY_SYRINGE_ITEM));
+
+        ServerLifecycleEvents.SERVER_STARTING.register(server -> SERVER_INSTANCE = server);
 
         registerAbilities();
 
@@ -70,8 +77,8 @@ public class NovaGenetica implements ModInitializer {
                 new AbilityEatGrass(),
                 new Identifier(MOD_ID, "eat_grass"),
                 REGISTRATION_HELPER.generateEntityTypeColorMap(
-                        Arrays.asList(EntityType.SHEEP),
-                        Arrays.asList(0xFFFFFF)
+                        Collections.singletonList(EntityType.SHEEP),
+                        Collections.singletonList(0xFFFFFF)
                 )
         );
 

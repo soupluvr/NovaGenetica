@@ -1,5 +1,7 @@
-package me.orangemonkey68.novagenetica;
+package me.orangemonkey68.novagenetica.item.helper;
 
+import me.orangemonkey68.novagenetica.NovaGenetica;
+import me.orangemonkey68.novagenetica.NovaGeneticaEntityType;
 import me.orangemonkey68.novagenetica.abilities.Ability;
 import me.orangemonkey68.novagenetica.abilities.AbilityValidator;
 import me.orangemonkey68.novagenetica.item.helper.ItemHelper;
@@ -69,6 +71,7 @@ public class RegistrationHelper {
             if(!ENTITY_TYPE_COLOR_MAP.containsKey(type)){
                 ENTITY_TYPE_COLOR_MAP.put(type, mobColor);
                 addItemToGroup(Subsection.INCOMPLETE_GENE, ItemHelper.getGene(Registry.ENTITY_TYPE.getId(type)));
+                addItemToGroup(Subsection.MOB_FLAKES, ItemHelper.getMobFlakes(Registry.ENTITY_TYPE.getId(type)));
             }
 
         });

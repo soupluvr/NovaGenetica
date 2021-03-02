@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.registry.Registry;
 
 public class MobScraperItem extends Item {
     public MobScraperItem(Settings settings) {
@@ -21,7 +22,7 @@ public class MobScraperItem extends Item {
             EntityType<?> entityType = entity.getType();
             NovaGeneticaEntityType ngEntityType = (NovaGeneticaEntityType) entityType;
             if(!ngEntityType.getAbilities().isEmpty()){
-                ItemStack stackToDrop = ItemHelper.getMobFlakes(entityType);
+                ItemStack stackToDrop = ItemHelper.getMobFlakes(Registry.ENTITY_TYPE.getId(entityType));
             }
         }
 

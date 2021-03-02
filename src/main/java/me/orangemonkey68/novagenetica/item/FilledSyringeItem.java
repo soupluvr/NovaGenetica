@@ -5,15 +5,22 @@ import me.orangemonkey68.novagenetica.NovaGeneticaPlayer;
 import me.orangemonkey68.novagenetica.abilities.Ability;
 import me.orangemonkey68.novagenetica.item.helper.NBTHelper;
 import net.minecraft.command.argument.ItemSlotArgumentType;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,7 +30,7 @@ import java.util.UUID;
 
 public class FilledSyringeItem extends Item {
 
-    private static final String UNKNOWN_TRANSLATION_KEY = "item.filled_syringe.unknown";
+    private static final TranslatableText UNKNOWN_NAME = new TranslatableText("item.novagenetica.filled_syringe.unknown");
 
     public FilledSyringeItem(Settings settings) {
         super(settings);
@@ -91,6 +98,10 @@ public class FilledSyringeItem extends Item {
             abilities.forEach(ngPlayer::giveAbility);
         } else {
             user.sendMessage(new TranslatableText("message.novagenetica.filled_syringe.bad_idea"), false);
+            user.damage(DamageSource.MAGIC, 5);
+            user.addStatusEffect(new StatusEffectInstance(StatusEffects.WITHER, 10*20, 1));
+            user.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 15*20, 0));
+            user.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 20*20, 2));
         }
 
         user.setStackInHand(hand, emptySyringe);
@@ -122,20 +133,45 @@ public class FilledSyringeItem extends Item {
         return new Identifier(abilityString);
     }
 
-    @Override
-    public String getTranslationKey(ItemStack stack) {
-        CompoundTag tag = stack.getTag();
-        //Return if tag is null
-        if(tag == null) return UNKNOWN_TRANSLATION_KEY;
-        String id = tag.getString("ability");
-        //Return if id is null
-        if(id == null) return UNKNOWN_TRANSLATION_KEY;
-        Ability ability = NovaGenetica.ABILITY_REGISTRY.get(new Identifier(id));
-        //return if ability is null
-        if(ability == null) return UNKNOWN_TRANSLATION_KEY;
-        String[] splitId = id.split(":");
+//    @Override
+//    public String getTranslationKey(ItemStack stack) {
+//        CompoundTag tag = stack.getTag();
+//        //Return if tag is null
+//        if(tag == null) return UNKNOWN_TRANSLATION_KEY;
+//        String id = tag.getString("ability");
+//        //Return if id is null
+//        if(id == null) return UNKNOWN_TRANSLATION_KEY;
+//        Ability ability = NovaGenetica.ABILITY_REGISTRY.get(new Identifier(id));
+//        //return if ability is null
+//        if(ability == null) return UNKNOWN_TRANSLATION_KEY;
+//        String[] splitId = id.split(":");
+//
+//        return "item.filled_syringe." + id;
+//    }
 
-        return "item.filled_syringe." + id;
+
+    @Override
+    public Text getName(ItemStack stack) {
+        CompoundTag tag = stack.getTag();
+        if(tag == null) return UNKNOWN_NAME;
+
+        if(tag.contains("uuid")){
+            UUID uuid = tag.getUuid("uuid");
+            if(NovaGenetica.SERVER_INSTANCE != null){
+                ServerPlayerEntity player = NovaGenetica.SERVER_INSTANCE.getPlayerManager().getPlayer(uuid);
+                if (player != null) {
+                    return new TranslatableText("item.novagenetica.filled_syringe.player", player.getName());
+                }
+            }
+        } else if (tag.contains("ability")){
+            Identifier id = new Identifier(tag.getString("ability"));
+            Ability ability = NovaGenetica.ABILITY_REGISTRY.get(id);
+            if(ability != null){
+                return new TranslatableText(getTranslationKey(), ability.getTranslationKey());
+            }
+        }
+
+        return UNKNOWN_NAME;
     }
 }
 

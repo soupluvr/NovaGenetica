@@ -3,10 +3,7 @@ package me.orangemonkey68.novagenetica.item.helper;
 import me.orangemonkey68.novagenetica.NovaGenetica;
 import me.orangemonkey68.novagenetica.NovaGeneticaPlayer;
 import me.orangemonkey68.novagenetica.abilities.Ability;
-import me.orangemonkey68.novagenetica.RegistrationHelper;
-import net.minecraft.command.argument.ItemSlotArgumentType;
 import net.minecraft.entity.EntityType;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -55,11 +52,16 @@ public class ItemHelper {
         return stack;
     }
 
-    public static ItemStack getMobFlakes(EntityType<?> entityType){
+    public static ItemStack getMobFlakes(Identifier entityTypeId){
         ItemStack stack = new ItemStack(NovaGenetica.MOB_FLAKES);
         CompoundTag tag = new CompoundTag();
-        tag.putInt("color", RegistrationHelper.ENTITY_TYPE_COLOR_MAP.getOrDefault(entityType, 0xFFFFFF));
-        tag.putString("entityType", Registry.ENTITY_TYPE.getId(entityType).toString());
+        tag.putString("entityType", entityTypeId.toString());
+        if(Registry.ENTITY_TYPE.containsId(entityTypeId)){
+            EntityType<?> type = Registry.ENTITY_TYPE.get(entityTypeId);
+            tag.putInt("color", RegistrationHelper.ENTITY_TYPE_COLOR_MAP.getOrDefault(type, 0xFFFFFF));
+        } else {
+            tag.putInt("color", 0xFFFFFF);
+        }
         stack.setTag(tag);
 
         return stack;
