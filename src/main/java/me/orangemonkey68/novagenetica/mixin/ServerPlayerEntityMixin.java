@@ -5,13 +5,13 @@ import me.orangemonkey68.novagenetica.NovaGenetica;
 import me.orangemonkey68.novagenetica.NovaGeneticaPlayer;
 import me.orangemonkey68.novagenetica.abilities.Ability;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.network.ServerPlayerInteractionManager;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.GameRules;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -137,6 +137,8 @@ public class ServerPlayerEntityMixin implements NovaGeneticaPlayer {
 
     @Inject(method = "onDeath", at = @At("TAIL"))
     void onDeath(DamageSource source, CallbackInfo ci){
-        ng_abilities.clear();
+        if(NovaGenetica.getConfig().loseAbilitiesOnDeath || !NovaGenetica.SERVER_INSTANCE.getGameRules().get(GameRules.KEEP_INVENTORY).get()){
+            ng_abilities.clear();
+        }
     }
 }

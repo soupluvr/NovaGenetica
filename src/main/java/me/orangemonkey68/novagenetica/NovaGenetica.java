@@ -17,8 +17,11 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Lazy;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.util.registry.SimpleRegistry;
@@ -43,11 +46,20 @@ public class NovaGenetica implements ModInitializer {
     public static final Item MOB_FLAKES = Registry.register(Registry.ITEM, new Identifier(MOD_ID, "mob_flakes"), new MobFlakesItem(new Item.Settings().maxCount(64)));
     public static final Item COMPLETE_GENE_ITEM = Registry.register(Registry.ITEM, new Identifier(MOD_ID, "complete_gene"), new CompleteGeneItem(new Item.Settings().maxCount(1)));
 
+    public static final MobScraperItem MOB_SCRAPER_ITEM = Registry.register(
+            Registry.ITEM,
+            new Identifier(MOD_ID, "mob_scraper"),
+            new MobScraperItem(
+                    new ItemMaterialImpl(100, 1, 3, 0, 0, new Lazy<>(() -> Ingredient.ofItems(Items.IRON_BARS))),
+                    new Item.Settings().maxCount(1)
+            )
+    );
+
     private static final RegistrationHelper REGISTRATION_HELPER = new RegistrationHelper(new Identifier(MOD_ID, "item_group"));
     @Override
     public void onInitialize() {
         AutoConfig.register(NovaGeneticaConfig.class, Toml4jConfigSerializer::new);
-
+        REGISTRATION_HELPER.addItemToGroup(RegistrationHelper.Subsection.START, new ItemStack(MOB_SCRAPER_ITEM));
         REGISTRATION_HELPER.addItemToGroup(RegistrationHelper.Subsection.START, new ItemStack(EMPTY_SYRINGE_ITEM));
 
         ServerLifecycleEvents.SERVER_STARTING.register(server -> SERVER_INSTANCE = server);

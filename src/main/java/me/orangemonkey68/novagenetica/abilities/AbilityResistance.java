@@ -1,7 +1,6 @@
 package me.orangemonkey68.novagenetica.abilities;
 
 import me.orangemonkey68.novagenetica.NovaGenetica;
-import me.orangemonkey68.novagenetica.client.NovaGeneticaClient;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.server.network.ServerPlayerEntity;

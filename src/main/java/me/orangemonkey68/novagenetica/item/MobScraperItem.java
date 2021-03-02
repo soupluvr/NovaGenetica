@@ -4,16 +4,20 @@ import me.orangemonkey68.novagenetica.NovaGeneticaEntityType;
 import me.orangemonkey68.novagenetica.item.helper.ItemHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ToolItem;
+import net.minecraft.item.ToolMaterial;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 
-public class MobScraperItem extends Item {
-    public MobScraperItem(Settings settings) {
-        super(settings);
+public class MobScraperItem extends ToolItem {
+
+    public MobScraperItem(ToolMaterial material, Settings settings) {
+        super(material, settings);
     }
 
     @Override
@@ -23,6 +27,12 @@ public class MobScraperItem extends Item {
             NovaGeneticaEntityType ngEntityType = (NovaGeneticaEntityType) entityType;
             if(!ngEntityType.getAbilities().isEmpty()){
                 ItemStack stackToDrop = ItemHelper.getMobFlakes(Registry.ENTITY_TYPE.getId(entityType));
+                Vec3d entityPos = entity.getPos();
+                entity.dropStack(stackToDrop);
+                entity.damage(DamageSource.player(user), 1);
+                user.getStackInHand(hand).damage(1, user, playerEntity -> playerEntity.sendToolBreakStatus(hand));
+
+                return ActionResult.SUCCESS;
             }
         }
 
