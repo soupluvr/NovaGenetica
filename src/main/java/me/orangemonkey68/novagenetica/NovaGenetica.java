@@ -5,7 +5,6 @@ import me.orangemonkey68.novagenetica.abilities.Ability;
 import me.orangemonkey68.novagenetica.abilities.AbilityEatGrass;
 import me.orangemonkey68.novagenetica.abilities.AbilityResistance;
 import me.orangemonkey68.novagenetica.abilities.AbilityScareCreepers;
-import me.orangemonkey68.novagenetica.commands.GiveAbilityCommand;
 import me.orangemonkey68.novagenetica.item.*;
 import me.orangemonkey68.novagenetica.item.helper.ItemHelper;
 import me.orangemonkey68.novagenetica.item.helper.RegistrationHelper;
@@ -13,7 +12,6 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
@@ -56,7 +54,7 @@ public class NovaGenetica implements ModInitializer {
 
         registerAbilities();
 
-        //Register colorproviders
+        //Register color providers
         ColorProviderRegistry.ITEM.register(new NovaGeneticaItemColorProvider(), FILLED_SYRINGE_ITEM);
         ColorProviderRegistry.ITEM.register(new NovaGeneticaItemColorProvider(), GENE_ITEM);
         ColorProviderRegistry.ITEM.register(new NovaGeneticaItemColorProvider(), MOB_FLAKES);
@@ -64,10 +62,6 @@ public class NovaGenetica implements ModInitializer {
 
         //Loops over all abilities, and runs their onRegistry() logic
         ABILITY_REGISTRY.forEach(Ability::onRegistryServer);
-
-        //Register /giveability command
-        //TODO: Fix /giveability command
-        CommandRegistrationCallback.EVENT.register(new GiveAbilityCommand());
 
         ITEM_GROUP = REGISTRATION_HELPER.buildGroup(ItemHelper.getCompleteGene(new Identifier(MOD_ID, "none")));
     }
