@@ -26,5 +26,13 @@
   "item.novagenetica.filled_syringe.player": "Syringe of %s's Blood",
   "item.novagenetica.gene": "%s Gene",
   "item.novagenetica.complete_gene": "Complete %s Gene",
-  "item.novagenetica.mob_flakes": "%s Flakes"
+  "item.novagenetica.mob_flakes": "%s Flakes",
+
+  "text.autoconfig.novagenetica.title": "Nova Genetica Config",
+  "text.autoconfig.novagenetica.option.loseAbilitiesOnDeath": "Lose abilities on death?",
+
+  "text.autoconfig.novagenetica.option.abilitiesConfig": "Abilities Config",
+  "text.autoconfig.novagenetica.option.abilitiesConfig.eat_grass": "Eat Grass",
+  "text.autoconfig.novagenetica.option.abilitiesConfig.resistance": "Resistance",
+  "text.autoconfig.novagenetica.option.abilitiesConfig.scare_creepers": "Scare Creepers"
 }

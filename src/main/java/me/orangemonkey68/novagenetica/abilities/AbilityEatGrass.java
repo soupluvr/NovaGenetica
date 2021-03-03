@@ -7,7 +7,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.TranslatableText;
@@ -78,7 +77,7 @@ public class AbilityEatGrass implements Ability, UseBlockCallback {
     @Override
     public ActionResult interact(PlayerEntity player, World world, Hand hand, BlockHitResult hitResult) {
 
-        if(!world.isClient){
+        if(!world.isClient && isEnabled()){
             NovaGeneticaPlayer ngPlayer = (NovaGeneticaPlayer)player;
             BlockPos pos = hitResult.getBlockPos();
             HungerManager hunger = player.getHungerManager();

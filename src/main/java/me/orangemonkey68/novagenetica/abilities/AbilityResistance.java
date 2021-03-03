@@ -44,7 +44,9 @@ public class AbilityResistance implements Ability{
 
     @Override
     public void onTick(ServerPlayerEntity player) {
-        player.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 20, 0, true, true));
+        if(isEnabled()){
+            player.addStatusEffect(new StatusEffectInstance(StatusEffects.RESISTANCE, 20, 0, true, true));
+        }
     }
 
     /**
