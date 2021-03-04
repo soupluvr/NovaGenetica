@@ -26,27 +26,25 @@ public class ItemHelper {
         return stack;
     }
 
-    public static ItemStack getCompleteGene(Identifier abilityId){
-        ItemStack stack = new ItemStack(NovaGenetica.COMPLETE_GENE_ITEM);
-        CompoundTag tag = new CompoundTag();
-        tag.putString("ability", abilityId.toString());
-        Ability ability = NovaGenetica.ABILITY_REGISTRY.get(abilityId);
-        tag.putInt("color", ability != null ? ability.getColor() : 0xFFFFFF);
-        stack.setTag(tag);
-
-        return stack;
-    }
-
-    public static ItemStack getGene(Identifier entityTypeId){
+    public static ItemStack getGene(Identifier entityTypeId, Identifier abilityId, boolean complete){
         ItemStack stack = new ItemStack(NovaGenetica.GENE_ITEM);
         CompoundTag tag = new CompoundTag();
-        tag.putString("entityType", entityTypeId.toString());
-        if(Registry.ENTITY_TYPE.containsId(entityTypeId)){
-            EntityType<?> type = Registry.ENTITY_TYPE.get(entityTypeId);
-            tag.putInt("color", RegistrationHelper.ENTITY_TYPE_COLOR_MAP.getOrDefault(type, 0xFFFFFF));
+
+        if(complete){
+            if(NovaGenetica.ABILITY_REGISTRY.containsId(abilityId)){
+                tag.putString("ability", abilityId.toString());
+                tag.putInt("color", NovaGenetica.ABILITY_REGISTRY.get(abilityId).getColor());
+            }
         } else {
-            tag.putInt("color", 0xFFFFFF);
+            if(Registry.ENTITY_TYPE.containsId(entityTypeId)){
+                tag.putString("entityType", entityTypeId.toString());
+                tag.putInt("color", RegistrationHelper.ENTITY_TYPE_COLOR_MAP.get(Registry.ENTITY_TYPE.get(entityTypeId)));
+            }
         }
+
+        //complete?
+        tag.putBoolean("complete", complete);
+
         stack.setTag(tag);
 
         return stack;

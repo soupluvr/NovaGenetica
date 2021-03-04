@@ -44,7 +44,7 @@ public class NovaGenetica implements ModInitializer {
     public static final Item FILLED_SYRINGE_ITEM = Registry.register(Registry.ITEM, new Identifier(MOD_ID, "filled_syringe"), new FilledSyringeItem(new Item.Settings().maxCount(1)));
     public static final Item GENE_ITEM = Registry.register(Registry.ITEM, new Identifier(MOD_ID, "gene"), new GeneItem(new Item.Settings().maxCount(1)));
     public static final Item MOB_FLAKES = Registry.register(Registry.ITEM, new Identifier(MOD_ID, "mob_flakes"), new MobFlakesItem(new Item.Settings().maxCount(64)));
-    public static final Item COMPLETE_GENE_ITEM = Registry.register(Registry.ITEM, new Identifier(MOD_ID, "complete_gene"), new CompleteGeneItem(new Item.Settings().maxCount(1)));
+//    public static final Item COMPLETE_GENE_ITEM = Registry.register(Registry.ITEM, new Identifier(MOD_ID, "complete_gene"), new CompleteGeneItem(new Item.Settings().maxCount(1)));
 
     public static final MobScraperItem MOB_SCRAPER_ITEM = Registry.register(
             Registry.ITEM,
@@ -70,12 +70,12 @@ public class NovaGenetica implements ModInitializer {
         ColorProviderRegistry.ITEM.register(new NovaGeneticaItemColorProvider(), FILLED_SYRINGE_ITEM);
         ColorProviderRegistry.ITEM.register(new NovaGeneticaItemColorProvider(), GENE_ITEM);
         ColorProviderRegistry.ITEM.register(new NovaGeneticaItemColorProvider(), MOB_FLAKES);
-        ColorProviderRegistry.ITEM.register(new NovaGeneticaItemColorProvider(), COMPLETE_GENE_ITEM);
+//        ColorProviderRegistry.ITEM.register(new NovaGeneticaItemColorProvider(), COMPLETE_GENE_ITEM);
 
         //Loops over all abilities, and runs their onRegistry() logic
         ABILITY_REGISTRY.forEach(Ability::onRegistryServer);
 
-        ITEM_GROUP = REGISTRATION_HELPER.buildGroup(ItemHelper.getCompleteGene(new Identifier(MOD_ID, "none")));
+        ITEM_GROUP = REGISTRATION_HELPER.buildGroup(ItemHelper.getGene(null, new Identifier(MOD_ID, "none"), true));
     }
 
     void registerAbilities(){

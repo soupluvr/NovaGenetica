@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "novagenetica",
   "version": "${version}",
-  "name": "NovaGeneticae",
+  "name": "Nova Genetica",
   "description": "Inspired by the Advanced Genetics mod",
   "authors": [
     "Orangemonkey68"
@@ -30,6 +30,7 @@
   "depends": {
     "fabricloader": ">=0.11.1",
     "fabric": "*",
-    "minecraft": "1.16.5"
+    "minecraft": "1.16.5",
+    "cloth-config2": ">=4.11.14"
   }
 }
