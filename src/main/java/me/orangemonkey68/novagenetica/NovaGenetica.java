@@ -5,6 +5,8 @@ import me.orangemonkey68.novagenetica.abilities.Ability;
 import me.orangemonkey68.novagenetica.abilities.AbilityEatGrass;
 import me.orangemonkey68.novagenetica.abilities.AbilityResistance;
 import me.orangemonkey68.novagenetica.abilities.AbilityScareCreepers;
+import me.orangemonkey68.novagenetica.block.NovaGeneticaMachineBlock;
+import me.orangemonkey68.novagenetica.blockentity.GeneExtractorBlockEntity;
 import me.orangemonkey68.novagenetica.item.*;
 import me.orangemonkey68.novagenetica.item.helper.ItemHelper;
 import me.orangemonkey68.novagenetica.item.helper.RegistrationHelper;
@@ -13,11 +15,12 @@ import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.minecraft.block.AbstractBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.Material;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.EntityType;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.item.*;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
@@ -39,12 +42,22 @@ public class NovaGenetica implements ModInitializer {
     public static final RegistryKey<Registry<Ability>> ABILITY_KEY = RegistryKey.ofRegistry(new Identifier(MOD_ID, "ability"));
     public static final Registry<Ability> ABILITY_REGISTRY = new SimpleRegistry<>(ABILITY_KEY, Lifecycle.stable());
 
+    private static final BlockEntityType<GeneExtractorBlockEntity> geneExtractorBlockEntity = BlockEntityType.Builder.create(GeneExtractorBlockEntity::new, GENE_EXTRACTOR_BLOCK).build(null)
+
+    public static final Block GENE_EXTRACTOR_BLOCK = Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "gene_extractor"), new NovaGeneticaMachineBlock(GeneExtractorBlockEntity::new, AbstractBlock.Settings.of(Material.METAL).strength(5f, 6f)));
+    public static final BlockEntityType<GeneExtractorBlockEntity> GENE_EXTRACTOR_BLOCK_ENTITY = Registry.register(
+            Registry.BLOCK_ENTITY_TYPE,
+            new Identifier(MOD_ID, "gene_extractor_block_entity"),
+            BlockEntityType.Builder.create(GeneExtractorBlockEntity::new, GENE_EXTRACTOR_BLOCK).build(null)
+    );
+    public static final Item GENE_EXTRACTOR_ITEM = Registry.register(Registry.ITEM, new Identifier("gene_extractor"), new BlockItem(GENE_EXTRACTOR_BLOCK, new Item.Settings().fireproof()));
+
+
     public static ItemGroup ITEM_GROUP;
     public static final Item EMPTY_SYRINGE_ITEM = Registry.register(Registry.ITEM, new Identifier(MOD_ID, "empty_syringe"), new EmptySyringeItem(new Item.Settings().maxCount(16)));
     public static final Item FILLED_SYRINGE_ITEM = Registry.register(Registry.ITEM, new Identifier(MOD_ID, "filled_syringe"), new FilledSyringeItem(new Item.Settings().maxCount(1)));
     public static final Item GENE_ITEM = Registry.register(Registry.ITEM, new Identifier(MOD_ID, "gene"), new GeneItem(new Item.Settings().maxCount(1)));
     public static final Item MOB_FLAKES = Registry.register(Registry.ITEM, new Identifier(MOD_ID, "mob_flakes"), new MobFlakesItem(new Item.Settings().maxCount(64)));
-//    public static final Item COMPLETE_GENE_ITEM = Registry.register(Registry.ITEM, new Identifier(MOD_ID, "complete_gene"), new CompleteGeneItem(new Item.Settings().maxCount(1)));
 
     public static final MobScraperItem MOB_SCRAPER_ITEM = Registry.register(
             Registry.ITEM,
@@ -61,6 +74,8 @@ public class NovaGenetica implements ModInitializer {
         AutoConfig.register(NovaGeneticaConfig.class, Toml4jConfigSerializer::new);
         REGISTRATION_HELPER.addItemToGroup(RegistrationHelper.Subsection.START, new ItemStack(MOB_SCRAPER_ITEM));
         REGISTRATION_HELPER.addItemToGroup(RegistrationHelper.Subsection.START, new ItemStack(EMPTY_SYRINGE_ITEM));
+
+        REGISTRATION_HELPER.addItemToGroup(RegistrationHelper.Subsection.MACHINE, new ItemStack(GENE_EXTRACTOR_ITEM));
 
         ServerLifecycleEvents.SERVER_STARTING.register(server -> SERVER_INSTANCE = server);
 

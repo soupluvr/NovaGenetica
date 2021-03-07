@@ -8,6 +8,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.options.KeyBinding;
@@ -23,5 +24,6 @@ public class NovaGeneticaClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         NovaGenetica.ABILITY_REGISTRY.forEach(Ability::onRegistryClient);
+//        ScreenRegistry.register();
     }
 }

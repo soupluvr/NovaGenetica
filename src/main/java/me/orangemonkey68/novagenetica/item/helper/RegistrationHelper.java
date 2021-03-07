@@ -35,6 +35,7 @@ public class RegistrationHelper {
         this.itemGroupBuilder = FabricItemGroupBuilder.create(itemGroupId);
         //Set up map
         itemMap.put(Subsection.START, new ArrayList<>());
+        itemMap.put(Subsection.MACHINE, new ArrayList<>());
         itemMap.put(Subsection.SYRINGE, new ArrayList<>());
         itemMap.put(Subsection.COMPLETE_GENE, new ArrayList<>());
         itemMap.put(Subsection.INCOMPLETE_GENE, new ArrayList<>());
@@ -103,6 +104,7 @@ public class RegistrationHelper {
 
         List<ItemStack> totalList = Stream.of(
                 itemMap.get(Subsection.START),
+                itemMap.get(Subsection.MACHINE),
                 itemMap.get(Subsection.SYRINGE),
                 itemMap.get(Subsection.COMPLETE_GENE),
                 itemMap.get(Subsection.INCOMPLETE_GENE),
@@ -135,6 +137,7 @@ public class RegistrationHelper {
 
     public enum Subsection {
         START,
+        MACHINE,
         SYRINGE,
         COMPLETE_GENE,
         INCOMPLETE_GENE,

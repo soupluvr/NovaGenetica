@@ -5,6 +5,7 @@ import me.orangemonkey68.novagenetica.NovaGeneticaPlayer;
 import me.orangemonkey68.novagenetica.abilities.Ability;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -40,5 +41,26 @@ public class NBTHelper {
         }
 
         return tag;
+    }
+
+    public static int getIntOrDefault(@NotNull CompoundTag tag, String key, int defaultVal){
+        if(tag.contains(key)){
+            return tag.getInt(key);
+        }
+        return defaultVal;
+    }
+
+    public static String getStringOrDefault(@NotNull CompoundTag tag, String key, String defaultVal){
+        if(tag.contains(key)){
+            return tag.getString(key);
+        }
+        return defaultVal;
+    }
+
+    public static float getFloatOrDefault(@NotNull CompoundTag tag, String key, float defaultVal){
+        if(tag.contains(key)){
+            return tag.getFloat(key);
+        }
+        return defaultVal;
     }
 }

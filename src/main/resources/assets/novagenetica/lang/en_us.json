@@ -34,5 +34,7 @@
   "text.autoconfig.novagenetica.option.abilitiesConfig": "Abilities Config",
   "text.autoconfig.novagenetica.option.abilitiesConfig.eat_grass": "Eat Grass",
   "text.autoconfig.novagenetica.option.abilitiesConfig.resistance": "Resistance",
-  "text.autoconfig.novagenetica.option.abilitiesConfig.scare_creepers": "Scare Creepers"
+  "text.autoconfig.novagenetica.option.abilitiesConfig.scare_creepers": "Scare Creepers",
+
+  "gui.novagenetica.gene_extractor.name": "Gene Extractor"
 }
