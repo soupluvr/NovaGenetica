@@ -1,10 +1,9 @@
 package me.orangemonkey68.novagenetica;
 
-import me.orangemonkey68.novagenetica.abilities.Ability;
+import blue.endless.jankson.Comment;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
-import org.lwjgl.system.CallbackI;
 
 @Config(name = NovaGenetica.MOD_ID)
 public class NovaGeneticaConfig implements ConfigData {
@@ -23,12 +22,18 @@ public class NovaGeneticaConfig implements ConfigData {
     }
 
     public static class MachinesConfig {
+        @Comment("Backup config used in case the specific machine's can't be found")
+        @ConfigEntry.Gui.Excluded
+        public PoweredMachineConfig defaultConfig = new PoweredMachineConfig();
+
         @ConfigEntry.Gui.CollapsibleObject
         public PoweredMachineConfig geneExtractorConfig = new PoweredMachineConfig();
     }
 
     public static class PoweredMachineConfig {
         public int maxInputPerTick = 1000;
-        public int maxStoredPower = 20000;
+        public int powerDrawPerTick = 80;
+        public int maxStoredPower = 50000;
+        public int processingTime = 200;
     }
 }

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "novagenetica:block/gene_extractor.json",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "novagenetica:block/gene_extractor.json"
+    },
+    "facing=south": {
+      "model": "novagenetica:block/gene_extractor.json",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "novagenetica:block/gene_extractor.json",
+      "y": 270
+    }
+  }
+}

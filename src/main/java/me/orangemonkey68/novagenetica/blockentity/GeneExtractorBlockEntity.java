@@ -1,37 +1,90 @@
 package me.orangemonkey68.novagenetica.blockentity;
 
 import me.orangemonkey68.novagenetica.NovaGenetica;
-import me.orangemonkey68.novagenetica.screenhandler.GeneExtractorScreenHandler;
-import net.minecraft.block.entity.BlockEntity;
+import me.orangemonkey68.novagenetica.NovaGeneticaConfig;
+import me.orangemonkey68.novagenetica.gui.GeneExtractorGuiDescription;
+import me.orangemonkey68.novagenetica.item.GeneItem;
+import me.orangemonkey68.novagenetica.item.helper.ItemHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.screen.ScreenHandlerContext;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
-public class GeneExtractorBlockEntity extends BlockEntity implements NamedScreenHandlerFactory, ImplementedInventory {
-    public final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(3, ItemStack.EMPTY);
+import java.util.Objects;
 
+public class GeneExtractorBlockEntity extends BaseMachineBlockEntity {
     public GeneExtractorBlockEntity() {
-        super(NovaGenetica.GENE_EXTRACTOR_BLOCK_ENTITY);
-    }
-
-    @Override
-    public DefaultedList<ItemStack> getItems() {
-        return inventory;
-    }
-
-    @Override
-    public Text getDisplayName() {
-        return new TranslatableText("gui.novagenetica.gene_extractor.name");
+        super(NovaGenetica.GENE_EXTRACTOR_BLOCK_ENTITY, 2, "block.novagenetica.gene_extractor", NovaGenetica.GENE_EXTRACTOR_ID);
     }
 
     @Override
     public @Nullable ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        return new GeneExtractorScreenHandler(syncId, inv, this);
+        return new GeneExtractorGuiDescription(syncId, inv, ScreenHandlerContext.create(world, pos));
+    }
+
+    @Override
+    public void tick() {
+        NovaGeneticaConfig.PoweredMachineConfig config = NovaGenetica.getMachineConfigMap().get();
+        int powerStep = ;
+        int maxProgress = Objects.requireNonNull(NovaGenetica.getConfig().machinesConfig.get(NovaGenetica.GENE_EXTRACTOR_ID)).processingTime;
+        if(isInputValid() && storedPower >= powerStep && progress <= maxProgress){
+            progress++;
+            storedPower -= powerStep;
+        } else {
+            progress = 0;
+        }
+
+        //If it's done processing
+        if(progress >= maxProgress){
+            progress = 0;
+            inventory.set(1, ItemHelper.getGene(null, new Identifier(NovaGenetica.MOD_ID, "eat_grass"), true));
+            inventory.set(0, ItemStack.EMPTY);
+        }
+    }
+
+    boolean isInputValid(){
+        ItemStack input = inventory.get(0);
+        CompoundTag tag = input.getTag();
+        if(tag != null){
+            if(tag.contains("complete") && tag.contains("entityType")){
+                return input.getItem() instanceof GeneItem && !tag.getBoolean("complete");
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public int[] getAvailableSlots(Direction side) {
+        if(side == Direction.UP){
+            return new int[]{0};
+        } else if (side == Direction.DOWN){
+            return new int[]{0};
+        } else {
+            return new int[0];
+        }
+    }
+
+    @Override
+    public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
+        return isValid(slot, stack);
+    }
+
+    @Override
+    public boolean canExtract(int slot, ItemStack stack, Direction dir) {
+        return slot == 1 && dir == Direction.DOWN;
+    }
+
+    @Override
+    public boolean isValid(int slot, ItemStack stack) {
+        if(slot == 1){
+            return false;
+        } else {
+            return true;
+        }
     }
 }

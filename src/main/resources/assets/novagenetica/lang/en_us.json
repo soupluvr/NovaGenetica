@@ -36,5 +36,5 @@
   "text.autoconfig.novagenetica.option.abilitiesConfig.resistance": "Resistance",
   "text.autoconfig.novagenetica.option.abilitiesConfig.scare_creepers": "Scare Creepers",
 
-  "gui.novagenetica.gene_extractor.name": "Gene Extractor"
+  "block.novagenetica.gene_extractor": "Gene Extractor"
 }
