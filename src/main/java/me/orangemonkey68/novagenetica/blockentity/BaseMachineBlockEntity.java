@@ -136,7 +136,7 @@ public abstract class BaseMachineBlockEntity extends BlockEntity implements Name
     }
 
     public int getMaxStoredPower(){
-        return NovaGenetica.getConfig().machineConfig.powerDrawPerTick;
+        return NovaGenetica.getConfig().machineConfig.maxStoredPower;
     }
 
     public int getProcessingTime(){

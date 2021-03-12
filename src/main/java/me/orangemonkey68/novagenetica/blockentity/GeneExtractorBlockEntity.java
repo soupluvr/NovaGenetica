@@ -29,9 +29,8 @@ public class GeneExtractorBlockEntity extends BaseMachineBlockEntity {
 
     @Override
     public void tick() {
-        NovaGeneticaConfig.PoweredMachineConfig config = NovaGenetica.getMachineConfigMap().get(blockId);
-        int powerStep = config.powerDrawPerTick;
-        int maxProgress = config.processingTime;
+        int powerStep = getPowerDrawPerTick();
+        int maxProgress = getProcessingTime();
         if(isInputValid() && storedPower >= powerStep && progress <= maxProgress){
             progress++;
             storedPower -= powerStep;
