@@ -26,24 +26,25 @@ public class ItemHelper {
         return stack;
     }
 
-    public static ItemStack getGene(Identifier entityTypeId, Identifier abilityId, boolean complete){
+    public static ItemStack getGene(Identifier entityTypeId, Identifier abilityId, boolean complete, boolean identified){
         ItemStack stack = new ItemStack(NovaGenetica.GENE_ITEM);
         CompoundTag tag = new CompoundTag();
 
-        if(complete){
-            if(NovaGenetica.ABILITY_REGISTRY.containsId(abilityId)){
+        if(NovaGenetica.ABILITY_REGISTRY.containsId(abilityId)){
                 tag.putString("ability", abilityId.toString());
                 tag.putInt("color", NovaGenetica.ABILITY_REGISTRY.get(abilityId).getColor());
-            }
-        } else {
-            if(Registry.ENTITY_TYPE.containsId(entityTypeId)){
-                tag.putString("entityType", entityTypeId.toString());
-                tag.putInt("color", RegistrationHelper.ENTITY_TYPE_COLOR_MAP.get(Registry.ENTITY_TYPE.get(entityTypeId)));
-            }
+        }
+
+        if(Registry.ENTITY_TYPE.containsId(entityTypeId)){
+            tag.putString("entityType", entityTypeId.toString());
+            tag.putInt("color", RegistrationHelper.ENTITY_TYPE_COLOR_MAP.get(Registry.ENTITY_TYPE.get(entityTypeId)));
         }
 
         //complete?
         tag.putBoolean("complete", complete);
+
+        //identified?
+        tag.putBoolean("identified", identified);
 
         stack.setTag(tag);
 
@@ -72,6 +73,7 @@ public class ItemHelper {
         tag.putInt("color", 0xe83c1a);
         tag.put("playerAbilities", NBTHelper.getAbilitiesTag(ngPlayer));
         tag.putUuid("uuid", player.getUuid());
+        tag.putString("playerName", player.getName().asString());
         stack.setTag(tag);
 
         return stack;

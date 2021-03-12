@@ -100,7 +100,7 @@ public class NovaGenetica implements ModInitializer {
         //Loops over all abilities, and runs their onRegistry() logic
         ABILITY_REGISTRY.forEach(Ability::onRegistryServer);
 
-        ITEM_GROUP = REGISTRATION_HELPER.buildGroup(ItemHelper.getGene(null, new Identifier(MOD_ID, "none"), true));
+        ITEM_GROUP = REGISTRATION_HELPER.buildGroup(ItemHelper.getGene(null, new Identifier(MOD_ID, "none"), true, false));
     }
 
     void registerBlocks(){

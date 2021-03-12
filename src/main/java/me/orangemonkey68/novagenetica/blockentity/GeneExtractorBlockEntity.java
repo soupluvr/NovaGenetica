@@ -29,9 +29,9 @@ public class GeneExtractorBlockEntity extends BaseMachineBlockEntity {
 
     @Override
     public void tick() {
-        NovaGeneticaConfig.PoweredMachineConfig config = NovaGenetica.getMachineConfigMap().get();
-        int powerStep = ;
-        int maxProgress = Objects.requireNonNull(NovaGenetica.getConfig().machinesConfig.get(NovaGenetica.GENE_EXTRACTOR_ID)).processingTime;
+        NovaGeneticaConfig.PoweredMachineConfig config = NovaGenetica.getMachineConfigMap().get(blockId);
+        int powerStep = config.powerDrawPerTick;
+        int maxProgress = config.processingTime;
         if(isInputValid() && storedPower >= powerStep && progress <= maxProgress){
             progress++;
             storedPower -= powerStep;
@@ -42,7 +42,7 @@ public class GeneExtractorBlockEntity extends BaseMachineBlockEntity {
         //If it's done processing
         if(progress >= maxProgress){
             progress = 0;
-            inventory.set(1, ItemHelper.getGene(null, new Identifier(NovaGenetica.MOD_ID, "eat_grass"), true));
+            inventory.set(1, ItemHelper.getGene(null, new Identifier(NovaGenetica.MOD_ID, "eat_grass"), true, false));
             inventory.set(0, ItemStack.EMPTY);
         }
     }
@@ -81,10 +81,6 @@ public class GeneExtractorBlockEntity extends BaseMachineBlockEntity {
 
     @Override
     public boolean isValid(int slot, ItemStack stack) {
-        if(slot == 1){
-            return false;
-        } else {
-            return true;
-        }
+        return slot != 1;
     }
 }

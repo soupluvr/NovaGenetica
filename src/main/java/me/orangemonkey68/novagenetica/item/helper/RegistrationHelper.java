@@ -70,13 +70,13 @@ public class RegistrationHelper {
 
             if(!ENTITY_TYPE_COLOR_MAP.containsKey(type)){
                 ENTITY_TYPE_COLOR_MAP.put(type, mobColor);
-                addItemToGroup(Subsection.INCOMPLETE_GENE, ItemHelper.getGene(Registry.ENTITY_TYPE.getId(type), null, false));
+                addItemToGroup(Subsection.INCOMPLETE_GENE, ItemHelper.getGene(Registry.ENTITY_TYPE.getId(type), null, false, false));
                 addItemToGroup(Subsection.MOB_FLAKES, ItemHelper.getMobFlakes(Registry.ENTITY_TYPE.getId(type)));
             }
 
         });
 
-        addItemToGroup(Subsection.COMPLETE_GENE, ItemHelper.getGene(null, abilityId, true));
+        addItemToGroup(Subsection.COMPLETE_GENE, ItemHelper.getGene(null, abilityId, true, true));
 
         //Adds to Ability.ABILITY_ENTITY_MAP
         Ability.ABILITY_ENTITY_MAP.put(ability, entityTypeColorMap.keySet());

@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
+@SuppressWarnings("deprecation")
 public class NovaGeneticaMachineBlock extends HorizontalFacingBlock implements BlockEntityProvider, InventoryProvider {
     private Supplier<BlockEntity> blockEntitySupplier;
 

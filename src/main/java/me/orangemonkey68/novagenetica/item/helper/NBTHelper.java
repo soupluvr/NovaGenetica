@@ -63,4 +63,11 @@ public class NBTHelper {
         }
         return defaultVal;
     }
+
+    public static boolean getBooleanOrDefault(@NotNull CompoundTag tag, @NotNull String key, boolean defaultVal){
+        if(tag.contains(key)){
+            return tag.getBoolean(key);
+        }
+        return defaultVal;
+    }
 }

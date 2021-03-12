@@ -18,13 +18,14 @@
   "ability.novagenetica.scare_creepers": "Scare Creepers",
   "message.novagenetica.ability.scare_creepers": "Creepers don't look so scary anymore",
 
-  "item.novagenetica.complete_gene.unknown": "Unknown Gene",
+  "item.novagenetica.unknown_gene": "Unknown Gene",
   "item.novagenetica.mob_flakes.unknown": "Unknown Mob Flakes",
   "item.novagenetica.filled_syringe.unknown": "Unknown Syringe",
 
   "item.novagenetica.filled_syringe": "%s Syringe",
   "item.novagenetica.filled_syringe.player": "Syringe of %s's Blood",
   "item.novagenetica.gene": "%s Gene",
+  "item.novagenetica.obfuscated_gene": "%s Gene",
   "item.novagenetica.complete_gene": "Complete %s Gene",
   "item.novagenetica.mob_flakes": "%s Flakes",
 

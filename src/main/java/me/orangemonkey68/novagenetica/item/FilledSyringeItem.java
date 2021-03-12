@@ -1,5 +1,6 @@
 package me.orangemonkey68.novagenetica.item;
 
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import me.orangemonkey68.novagenetica.NovaGenetica;
 import me.orangemonkey68.novagenetica.NovaGeneticaPlayer;
 import me.orangemonkey68.novagenetica.abilities.Ability;
@@ -14,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Hand;
@@ -155,13 +157,10 @@ public class FilledSyringeItem extends Item {
         CompoundTag tag = stack.getTag();
         if(tag == null) return UNKNOWN_NAME;
 
-        if(tag.contains("uuid")){
-            UUID uuid = tag.getUuid("uuid");
-            if(NovaGenetica.SERVER_INSTANCE != null){
-                ServerPlayerEntity player = NovaGenetica.SERVER_INSTANCE.getPlayerManager().getPlayer(uuid);
-                if (player != null) {
-                    return new TranslatableText("item.novagenetica.filled_syringe.player", player.getName());
-                }
+        if(tag.contains("playerName")){
+            String name = tag.getString("playerName");
+            if(name != null){
+                return new TranslatableText("item.novagenetica.filled_syringe.player", new LiteralText(name));
             }
         } else if (tag.contains("ability")){
             Identifier id = new Identifier(tag.getString("ability"));

@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 public abstract class BaseMachineBlockEntity extends BlockEntity implements NamedScreenHandlerFactory, ImplementedInventory, InventoryProvider, SidedInventory, Tickable, PropertyDelegateHolder {
     public final DefaultedList<ItemStack> inventory;
     private final String translationKey;
-    private final Identifier blockId;
+    protected final Identifier blockId;
 
     public static final int MAX_PROGRESS_INDEX = 0;
     public static final int PROGRESS_INDEX = 1;
