@@ -13,21 +13,12 @@ public class NovaGeneticaConfig implements ConfigData {
     public AbilitiesConfig abilitiesConfig = new AbilitiesConfig();
 
     @ConfigEntry.Gui.CollapsibleObject
-    public MachinesConfig machinesConfig = new MachinesConfig();
+    public PoweredMachineConfig machineConfig = new PoweredMachineConfig();
 
     public static class AbilitiesConfig {
         public boolean eat_grass = true;
         public boolean resistance = true;
         public boolean scare_creepers = true;
-    }
-
-    public static class MachinesConfig {
-        @Comment("Backup config used in case the specific machine's can't be found")
-        @ConfigEntry.Gui.Excluded
-        public PoweredMachineConfig defaultConfig = new PoweredMachineConfig();
-
-        @ConfigEntry.Gui.CollapsibleObject
-        public PoweredMachineConfig geneExtractorConfig = new PoweredMachineConfig();
     }
 
     public static class PoweredMachineConfig {

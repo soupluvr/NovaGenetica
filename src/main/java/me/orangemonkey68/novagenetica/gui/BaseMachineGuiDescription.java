@@ -31,8 +31,7 @@ public class BaseMachineGuiDescription extends SyncedGuiDescription {
         root.add(progressBar, 4, 2);
 
         WBar powerBar = new WBar(NovaGenetica.powerBarBackground, NovaGenetica.powerBarComplete, BaseMachineBlockEntity.STORED_POWER, BaseMachineBlockEntity.MAX_STORED_POWER, WBar.Direction.UP);
-        //TODO: Un-hardcode that 50,000
-        powerBar.withTooltip(new LiteralText(propertyDelegate.get(BaseMachineBlockEntity.STORED_POWER) + "/" + 50000));
+        powerBar.withTooltip(new LiteralText(propertyDelegate.get(BaseMachineBlockEntity.STORED_POWER) + "/" + NovaGenetica.getConfig().machineConfig.maxStoredPower));
         root.add(powerBar, 0, 1, 1, 3);
 
         WItemSlot outputSlot = new WItemSlot(blockInventory, outputSlotIndex, 1, 1, true);

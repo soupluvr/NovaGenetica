@@ -44,13 +44,11 @@ public abstract class BaseMachineBlockEntity extends BlockEntity implements Name
         @Override
         public int get(int index) {
             if(index == 0){
-                NovaGeneticaConfig.PoweredMachineConfig machineConfig = NovaGenetica.getMachineConfigMap().get(blockId);
-                return machineConfig != null ? machineConfig.processingTime : 200;
+                return getProcessingTime();
             } else if (index == 1){
                 return progress;
             } else if (index == 2){
-                NovaGeneticaConfig.PoweredMachineConfig machineConfig = NovaGenetica.getMachineConfigMap().get(blockId);
-                return machineConfig != null ? machineConfig.maxStoredPower : 50000;
+                return getMaxStoredPower();
             } else if (index == 3){
                 return storedPower;
             }
@@ -134,10 +132,14 @@ public abstract class BaseMachineBlockEntity extends BlockEntity implements Name
     }
 
     public int getPowerDrawPerTick(){
-        return NovaGenetica.getMachineConfigMap().getOrDefault(blockId, NovaGenetica.getConfig().machinesConfig.defaultConfig).powerDrawPerTick;
+        return NovaGenetica.getConfig().machineConfig.powerDrawPerTick;
+    }
+
+    public int getMaxStoredPower(){
+        return NovaGenetica.getConfig().machineConfig.powerDrawPerTick;
     }
 
     public int getProcessingTime(){
-        return NovaGenetica.getMachineConfigMap().getOrDefault(blockId, NovaGenetica.getConfig().machinesConfig.defaultConfig).processingTime;
+        return NovaGenetica.getConfig().machineConfig.powerDrawPerTick;
     }
 }

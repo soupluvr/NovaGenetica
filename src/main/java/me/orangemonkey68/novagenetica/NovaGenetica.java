@@ -77,6 +77,7 @@ public class NovaGenetica implements ModInitializer {
     );
 
     private static final RegistrationHelper REGISTRATION_HELPER = new RegistrationHelper(new Identifier(MOD_ID, "item_group"));
+
     @Override
     public void onInitialize() {
         AutoConfig.register(NovaGeneticaConfig.class, Toml4jConfigSerializer::new);
@@ -103,7 +104,7 @@ public class NovaGenetica implements ModInitializer {
         ITEM_GROUP = REGISTRATION_HELPER.buildGroup(ItemHelper.getGene(null, new Identifier(MOD_ID, "none"), true, false));
     }
 
-    void registerBlocks(){
+    void registerBlocks() {
         AbstractBlock.Settings blockSettings = AbstractBlock.Settings.of(Material.METAL).sounds(BlockSoundGroup.NETHERITE).strength(1200f, 50f).requiresTool();
         Item.Settings itemSettings = new Item.Settings().fireproof();
 
@@ -114,15 +115,7 @@ public class NovaGenetica implements ModInitializer {
         GENE_EXTRACTOR_ITEM = Registry.register(Registry.ITEM, GENE_EXTRACTOR_ID, new BlockItem(GENE_EXTRACTOR_BLOCK, itemSettings));
     }
 
-//    void registerBlockWithEntity(AbstractBlock.Settings blockSettings, Item.Settings itemSettings, Supplier<BlockEntity> blockEntitySupplier, Identifier id, @Nullable NovaGeneticaMachineBlock blockField, @Nullable BlockEntityType<?> blockEntityField, @Nullable BlockItem blockItemField){
-//        NovaGeneticaMachineBlock machineBlock = new NovaGeneticaMachineBlock(blockSettings);
-//        machineBlock.setBlockEntity(blockEntitySupplier);
-//        blockField = Registry.register(Registry.BLOCK, id, machineBlock);
-//        blockEntityField = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(id.getNamespace(), id.getPath() + "_block_entity"), BlockEntityType.Builder.create(blockEntitySupplier, machineBlock).build(null));
-//        blockItemField = Registry.register(Registry.ITEM, id, new BlockItem(GENE_EXTRACTOR_BLOCK, itemSettings));
-//    }
-
-    void registerAbilities(){
+    void registerAbilities() {
         REGISTRATION_HELPER.register(
                 new AbilityEatGrass(),
                 new Identifier(MOD_ID, "eat_grass"),
@@ -151,18 +144,7 @@ public class NovaGenetica implements ModInitializer {
         );
     }
 
-    public static NovaGeneticaConfig getConfig(){
+    public static NovaGeneticaConfig getConfig() {
         return AutoConfig.getConfigHolder(NovaGeneticaConfig.class).get();
-    }
-
-    private static void regenerateMachineConfigMap(){
-        NovaGeneticaConfig config = getConfig();
-        MACHINES_CONFIG_MAP = new HashMap<>();
-        MACHINES_CONFIG_MAP.put(GENE_EXTRACTOR_ID, config.machinesConfig.geneExtractorConfig);
-    }
-
-    public static Map<Identifier, NovaGeneticaConfig.PoweredMachineConfig> getMachineConfigMap(){
-        regenerateMachineConfigMap();
-        return MACHINES_CONFIG_MAP;
     }
 }
