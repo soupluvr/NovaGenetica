@@ -109,6 +109,7 @@ public class NovaGenetica implements ModInitializer {
         Item.Settings itemSettings = new Item.Settings().fireproof();
 
         NovaGeneticaMachineBlock geneExtractorBlock = new NovaGeneticaMachineBlock(blockSettings);
+
         geneExtractorBlock.setBlockEntity(GeneExtractorBlockEntity::new);
         GENE_EXTRACTOR_BLOCK = Registry.register(Registry.BLOCK, GENE_EXTRACTOR_ID, geneExtractorBlock);
         GENE_EXTRACTOR_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, GENE_EXTRACTOR_ID, BlockEntityType.Builder.create(GeneExtractorBlockEntity::new, GENE_EXTRACTOR_BLOCK).build(null));

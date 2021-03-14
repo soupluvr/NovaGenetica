@@ -42,7 +42,6 @@ public class NovaGeneticaMachineBlock extends HorizontalFacingBlock implements B
     //This is deprecated, but I don't know a better alternative
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        System.out.println(state.createScreenHandlerFactory(world, pos));
         player.openHandledScreen(state.createScreenHandlerFactory(world, pos));
         return ActionResult.SUCCESS;
     }

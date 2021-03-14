@@ -2,7 +2,6 @@ package me.orangemonkey68.novagenetica.blockentity;
 
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder;
 import me.orangemonkey68.novagenetica.NovaGenetica;
-import me.orangemonkey68.novagenetica.NovaGeneticaConfig;
 import me.orangemonkey68.novagenetica.item.helper.NBTHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.InventoryProvider;
@@ -28,7 +27,7 @@ import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class BaseMachineBlockEntity extends BlockEntity implements NamedScreenHandlerFactory, ImplementedInventory, InventoryProvider, SidedInventory, Tickable, PropertyDelegateHolder {
-    public final DefaultedList<ItemStack> inventory;
+
     private final String translationKey;
     protected final Identifier blockId;
 
@@ -71,18 +70,14 @@ public abstract class BaseMachineBlockEntity extends BlockEntity implements Name
         }
     };
 
-    public BaseMachineBlockEntity(BlockEntityType<?> type, int inventorySlots, String translationKey, Identifier blockId) {
+    public BaseMachineBlockEntity(BlockEntityType<?> type, String translationKey, Identifier blockId) {
         super(type);
-        this.inventory = DefaultedList.ofSize(inventorySlots, ItemStack.EMPTY);
         this.translationKey = translationKey;
         this.blockId = blockId;
     }
 
     @Override
-    public DefaultedList<ItemStack> getItems() {
-        return inventory;
-    }
-
+    public abstract DefaultedList<ItemStack> getItems();
     @Override
     public SidedInventory getInventory(BlockState state, WorldAccess world, BlockPos pos) {
         return this;
@@ -111,7 +106,7 @@ public abstract class BaseMachineBlockEntity extends BlockEntity implements Name
     @Override
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
-        Inventories.toTag(tag, inventory);
+        Inventories.toTag(tag, getItems());
         tag.putInt("storedPower", storedPower);
         tag.putInt("progress", progress);
 
@@ -121,7 +116,7 @@ public abstract class BaseMachineBlockEntity extends BlockEntity implements Name
     @Override
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
-        Inventories.fromTag(tag, inventory);
+        Inventories.fromTag(tag, getItems());
         storedPower = NBTHelper.getIntOrDefault(tag, "storedPower", 0);
         progress = NBTHelper.getIntOrDefault(tag, "progress", 0);
     }

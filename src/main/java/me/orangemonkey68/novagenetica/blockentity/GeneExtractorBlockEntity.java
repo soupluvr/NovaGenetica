@@ -1,25 +1,28 @@
 package me.orangemonkey68.novagenetica.blockentity;
 
 import me.orangemonkey68.novagenetica.NovaGenetica;
-import me.orangemonkey68.novagenetica.NovaGeneticaConfig;
 import me.orangemonkey68.novagenetica.gui.GeneExtractorGuiDescription;
-import me.orangemonkey68.novagenetica.item.GeneItem;
-import me.orangemonkey68.novagenetica.item.helper.ItemHelper;
+import me.orangemonkey68.novagenetica.item.MobFlakesItem;
+import net.minecraft.command.argument.ItemSlotArgumentType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
-
 public class GeneExtractorBlockEntity extends BaseMachineBlockEntity {
+    protected DefaultedList<ItemStack> itemStacks = DefaultedList.ofSize(2, ItemStack.EMPTY);
+
     public GeneExtractorBlockEntity() {
-        super(NovaGenetica.GENE_EXTRACTOR_BLOCK_ENTITY, 2, "block.novagenetica.gene_extractor", NovaGenetica.GENE_EXTRACTOR_ID);
+        super(NovaGenetica.GENE_EXTRACTOR_BLOCK_ENTITY, "block.novagenetica.gene_extractor", NovaGenetica.GENE_EXTRACTOR_ID);
     }
 
     @Override
@@ -31,30 +34,44 @@ public class GeneExtractorBlockEntity extends BaseMachineBlockEntity {
     public void tick() {
         int powerStep = getPowerDrawPerTick();
         int maxProgress = getProcessingTime();
-        if(isInputValid() && storedPower >= powerStep && progress <= maxProgress){
+
+        if(isInputValid() && storedPower >= powerStep && progress <= maxProgress && (itemStacks.get(1) == ItemStack.EMPTY || itemStacks.get(1).getItem() == Items.AIR)){
             progress++;
             storedPower -= powerStep;
         } else {
             progress = 0;
         }
 
-        //If it's done processing
         if(progress >= maxProgress){
             progress = 0;
-            inventory.set(1, ItemHelper.getGene(null, new Identifier(NovaGenetica.MOD_ID, "eat_grass"), true, false));
-            inventory.set(0, ItemStack.EMPTY);
+
+            ItemStack inputStack = itemStacks.get(0);
+            if(inputStack.getCount() > 1){
+                inputStack.decrement(1);
+            } else {
+                itemStacks.set(0, ItemStack.EMPTY);
+            }
+
+            itemStacks.set(1, new ItemStack(Items.STONE));
+            markDirty();
         }
     }
 
     boolean isInputValid(){
-        ItemStack input = inventory.get(0);
+        ItemStack input = itemStacks.get(0);
         CompoundTag tag = input.getTag();
-        if(tag != null){
-            if(tag.contains("complete") && tag.contains("entityType")){
-                return input.getItem() instanceof GeneItem && !tag.getBoolean("complete");
-            }
+
+        if(tag != null && input.getItem() instanceof MobFlakesItem){
+            //Return true if tag contains the ID of an existing EntityType
+            return tag.contains("entityType") && Registry.ENTITY_TYPE.containsId(new Identifier(tag.getString("entityType")));
         }
+
         return false;
+    }
+
+    @Override
+    public DefaultedList<ItemStack> getItems() {
+        return itemStacks;
     }
 
     @Override
@@ -62,7 +79,7 @@ public class GeneExtractorBlockEntity extends BaseMachineBlockEntity {
         if(side == Direction.UP){
             return new int[]{0};
         } else if (side == Direction.DOWN){
-            return new int[]{0};
+            return new int[]{1};
         } else {
             return new int[0];
         }
