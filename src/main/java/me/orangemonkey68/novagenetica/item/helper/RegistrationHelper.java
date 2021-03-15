@@ -1,5 +1,6 @@
 package me.orangemonkey68.novagenetica.item.helper;
 
+import me.orangemonkey68.novagenetica.LootTableManager;
 import me.orangemonkey68.novagenetica.NovaGenetica;
 import me.orangemonkey68.novagenetica.NovaGeneticaEntityType;
 import me.orangemonkey68.novagenetica.abilities.Ability;
@@ -68,6 +69,8 @@ public class RegistrationHelper {
             ENTITY_TYPE_ABILITY_WEIGHT_MAP.get(type).put(ability, ability.getLootTableWeight());
 
             Identifier typeId = Registry.ENTITY_TYPE.getId(type);
+
+            LootTableManager.register(Registry.ENTITY_TYPE.getId(type), ability);
 
             ItemStack incompleteGene = ItemHelper.getGene(typeId, null, false, false);
 

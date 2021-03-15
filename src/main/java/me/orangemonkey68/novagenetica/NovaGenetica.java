@@ -180,10 +180,6 @@ public class NovaGenetica implements ModInitializer {
         REGISTRATION_HELPER.registerEntityColor(0x15471a, EntityType.ZOMBIE_VILLAGER);
     }
 
-    void registerLootTables(){
-
-    }
-
     public static NovaGeneticaConfig getConfig() {
         return AutoConfig.getConfigHolder(NovaGeneticaConfig.class).get();
     }

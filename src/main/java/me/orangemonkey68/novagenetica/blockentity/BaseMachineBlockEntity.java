@@ -11,7 +11,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SidedInventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.PropertyDelegate;
@@ -49,6 +51,7 @@ public abstract class BaseMachineBlockEntity extends BlockEntity implements
 
     protected int progress = 0;
     protected double storedPower = 0;
+    protected final DefaultedList<ItemStack> itemStacks;
 
     private final PropertyDelegate propertyDelegate = new PropertyDelegate() {
         @Override
@@ -81,14 +84,13 @@ public abstract class BaseMachineBlockEntity extends BlockEntity implements
         }
     };
 
-    public BaseMachineBlockEntity(BlockEntityType<?> type, String translationKey, Identifier blockId) {
+    public BaseMachineBlockEntity(BlockEntityType<?> type, String translationKey, Identifier blockId, int inventorySize) {
         super(type);
         this.translationKey = translationKey;
         this.blockId = blockId;
+        this.itemStacks = DefaultedList.ofSize(inventorySize, ItemStack.EMPTY);
     }
 
-    @Override
-    public abstract DefaultedList<ItemStack> getItems();
     @Override
     public SidedInventory getInventory(BlockState state, WorldAccess world, BlockPos pos) {
         return this;
@@ -112,7 +114,30 @@ public abstract class BaseMachineBlockEntity extends BlockEntity implements
     public abstract @Nullable ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player);
 
     @Override
-    public abstract void tick();
+    public void tick(){
+        int powerStep = getPowerDrawPerTick();
+        int maxProgress = getProcessingTime();
+
+        //Draw power
+        if(isValid(0, itemStacks.get(0)) && storedPower >= powerStep && progress <= maxProgress && (itemStacks.get(1) == ItemStack.EMPTY || itemStacks.get(1).getItem() == Items.AIR)){
+            progress++;
+            storedPower -= powerStep;
+        } else {
+            progress = 0;
+        }
+
+        if(progress >= maxProgress){
+            progress = 0;
+            doneProcessing();
+        }
+    }
+
+    public abstract void doneProcessing();
+
+    @Override
+    public DefaultedList<ItemStack> getItems(){
+        return itemStacks;
+    }
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {

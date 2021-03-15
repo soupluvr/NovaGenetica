@@ -20,10 +20,9 @@ import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 
 public class GeneExtractorBlockEntity extends BaseMachineBlockEntity {
-    protected DefaultedList<ItemStack> itemStacks = DefaultedList.ofSize(2, ItemStack.EMPTY);
 
     public GeneExtractorBlockEntity() {
-        super(NovaGenetica.GENE_EXTRACTOR_BLOCK_ENTITY, "block.novagenetica.gene_extractor", NovaGenetica.GENE_EXTRACTOR_ID);
+        super(NovaGenetica.GENE_EXTRACTOR_BLOCK_ENTITY, "block.novagenetica.gene_extractor", NovaGenetica.GENE_EXTRACTOR_ID, 2);
     }
 
     @Override
@@ -32,30 +31,16 @@ public class GeneExtractorBlockEntity extends BaseMachineBlockEntity {
     }
 
     @Override
-    public void tick() {
-        int powerStep = getPowerDrawPerTick();
-        int maxProgress = getProcessingTime();
-
-        if(isInputValid() && storedPower >= powerStep && progress <= maxProgress && (itemStacks.get(1) == ItemStack.EMPTY || itemStacks.get(1).getItem() == Items.AIR)){
-            progress++;
-            storedPower -= powerStep;
+    public void doneProcessing() {
+        ItemStack inputStack = itemStacks.get(0);
+        if(inputStack.getCount() > 1){
+            inputStack.decrement(1);
         } else {
-            progress = 0;
+            itemStacks.set(0, ItemStack.EMPTY);
         }
 
-        if(progress >= maxProgress){
-            progress = 0;
-
-            ItemStack inputStack = itemStacks.get(0);
-            if(inputStack.getCount() > 1){
-                inputStack.decrement(1);
-            } else {
-                itemStacks.set(0, ItemStack.EMPTY);
-            }
-
-            itemStacks.set(1, getOutput(inputStack));
-            markDirty();
-        }
+        itemStacks.set(1, getOutput(inputStack));
+        markDirty();
     }
 
     boolean isInputValid(){
@@ -77,11 +62,6 @@ public class GeneExtractorBlockEntity extends BaseMachineBlockEntity {
         }
         //this should literally never run
         return ItemStack.EMPTY;
-    }
-
-    @Override
-    public DefaultedList<ItemStack> getItems() {
-        return itemStacks;
     }
 
     @Override
@@ -107,6 +87,14 @@ public class GeneExtractorBlockEntity extends BaseMachineBlockEntity {
 
     @Override
     public boolean isValid(int slot, ItemStack stack) {
-        return slot != 1;
+        if(slot == 1){
+            CompoundTag tag = stack.getTag();
+
+            if(tag != null && stack.getItem() instanceof MobFlakesItem){
+                //Return true if tag contains the ID of an existing EntityType
+                return tag.contains("entityType") && Registry.ENTITY_TYPE.containsId(new Identifier(tag.getString("entityType")));
+            }
+        }
+        return false;
     }
 }

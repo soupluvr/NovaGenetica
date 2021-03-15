@@ -32,15 +32,14 @@ public class LootTableManager {
         PRE_ENTITY_LOOT_POOL_MAP.putIfAbsent(entityTypeId, getBuilder());
 
         FabricLootPoolBuilder builder = PRE_ENTITY_LOOT_POOL_MAP.get(entityTypeId);
-        //Adds an entry of novagenetica:gene_item
 
         CompoundTag nbt = ItemHelper.getGene(entityTypeId, null, false, false).getTag();
 
         //Adds item entry
         builder.withEntry(
-                ItemEntry.builder(NovaGenetica.GENE_ITEM) // creates builder
-                .weight(ability.getLootTableWeight()) // set weight to ability weight
-                .apply(SetNbtLootFunction.builder(nbt)) // adds a function to set the nbt to the correct values
+                ItemEntry.builder(NovaGenetica.GENE_ITEM)  // creates builder
+                .weight(ability.getLootTableWeight())      // set weight to ability weight
+                .apply(SetNbtLootFunction.builder(nbt))    // adds a function to set the nbt to the correct values
                 .build()
         );
     }
