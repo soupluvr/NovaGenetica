@@ -25,8 +25,19 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
+import team.reborn.energy.EnergyHolder;
+import team.reborn.energy.EnergySide;
+import team.reborn.energy.EnergyStorage;
+import team.reborn.energy.EnergyTier;
 
-public abstract class BaseMachineBlockEntity extends BlockEntity implements NamedScreenHandlerFactory, ImplementedInventory, InventoryProvider, SidedInventory, Tickable, PropertyDelegateHolder {
+public abstract class BaseMachineBlockEntity extends BlockEntity implements
+        NamedScreenHandlerFactory,
+        ImplementedInventory,
+        InventoryProvider,
+        SidedInventory,
+        Tickable,
+        PropertyDelegateHolder,
+        EnergyStorage {
 
     private final String translationKey;
     protected final Identifier blockId;
@@ -37,7 +48,7 @@ public abstract class BaseMachineBlockEntity extends BlockEntity implements Name
     public static final int STORED_POWER = 3;
 
     protected int progress = 0;
-    protected int storedPower = 0;
+    protected double storedPower = 0;
 
     private final PropertyDelegate propertyDelegate = new PropertyDelegate() {
         @Override
@@ -47,9 +58,9 @@ public abstract class BaseMachineBlockEntity extends BlockEntity implements Name
             } else if (index == 1){
                 return progress;
             } else if (index == 2){
-                return getMaxStoredPower();
+                return getMaximumPower();
             } else if (index == 3){
-                return storedPower;
+                return (int) storedPower;
             }
 
             return -1;
@@ -107,7 +118,7 @@ public abstract class BaseMachineBlockEntity extends BlockEntity implements Name
     public CompoundTag toTag(CompoundTag tag) {
         super.toTag(tag);
         Inventories.toTag(tag, getItems());
-        tag.putInt("storedPower", storedPower);
+        tag.putDouble("storedPower", storedPower);
         tag.putInt("progress", progress);
 
         return tag;
@@ -117,7 +128,7 @@ public abstract class BaseMachineBlockEntity extends BlockEntity implements Name
     public void fromTag(BlockState state, CompoundTag tag) {
         super.fromTag(state, tag);
         Inventories.fromTag(tag, getItems());
-        storedPower = NBTHelper.getIntOrDefault(tag, "storedPower", 0);
+        storedPower = NBTHelper.getDoubleOrDefault(tag, "storedPower", 0);
         progress = NBTHelper.getIntOrDefault(tag, "progress", 0);
     }
 
@@ -130,11 +141,41 @@ public abstract class BaseMachineBlockEntity extends BlockEntity implements Name
         return NovaGenetica.getConfig().machineConfig.powerDrawPerTick;
     }
 
-    public int getMaxStoredPower(){
+    public int getMaximumPower(){
         return NovaGenetica.getConfig().machineConfig.maxStoredPower;
     }
 
     public int getProcessingTime(){
         return NovaGenetica.getConfig().machineConfig.powerDrawPerTick;
+    }
+
+    @Override
+    public double getMaxInput(EnergySide side) {
+        return Double.MAX_VALUE;
+    }
+
+    @Override
+    public double getMaxOutput(EnergySide side) {
+        return 0;
+    }
+
+    @Override
+    public double getMaxStoredPower() {
+        return NovaGenetica.getConfig().machineConfig.maxStoredPower;
+    }
+
+    @Override
+    public EnergyTier getTier() {
+        return EnergyTier.MEDIUM;
+    }
+
+    @Override
+    public double getStored(EnergySide face) {
+        return storedPower;
+    }
+
+    @Override
+    public void setStored(double amount) {
+        this.storedPower = amount;
     }
 }

@@ -64,6 +64,13 @@ public class NBTHelper {
         return defaultVal;
     }
 
+    public static double getDoubleOrDefault(@NotNull CompoundTag tag, String key, double defaultVal){
+        if(tag.contains(key)){
+            return tag.getDouble(key);
+        }
+        return defaultVal;
+    }
+
     public static boolean getBooleanOrDefault(@NotNull CompoundTag tag, @NotNull String key, boolean defaultVal){
         if(tag.contains(key)){
             return tag.getBoolean(key);

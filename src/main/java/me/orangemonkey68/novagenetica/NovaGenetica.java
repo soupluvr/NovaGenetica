@@ -6,6 +6,7 @@ import me.orangemonkey68.novagenetica.abilities.AbilityEatGrass;
 import me.orangemonkey68.novagenetica.abilities.AbilityResistance;
 import me.orangemonkey68.novagenetica.abilities.AbilityScareCreepers;
 import me.orangemonkey68.novagenetica.block.NovaGeneticaMachineBlock;
+import me.orangemonkey68.novagenetica.blockentity.BaseMachineBlockEntity;
 import me.orangemonkey68.novagenetica.blockentity.GeneExtractorBlockEntity;
 import me.orangemonkey68.novagenetica.gui.GeneExtractorGuiDescription;
 import me.orangemonkey68.novagenetica.item.*;
@@ -37,6 +38,8 @@ import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.util.registry.SimpleRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import team.reborn.energy.Energy;
+import team.reborn.energy.EnergyStorage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -161,6 +164,7 @@ public class NovaGenetica implements ModInitializer {
         GENE_EXTRACTOR_BLOCK = Registry.register(Registry.BLOCK, GENE_EXTRACTOR_ID, geneExtractorBlock);
         GENE_EXTRACTOR_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, GENE_EXTRACTOR_ID, BlockEntityType.Builder.create(GeneExtractorBlockEntity::new, GENE_EXTRACTOR_BLOCK).build(null));
         GENE_EXTRACTOR_ITEM = Registry.register(Registry.ITEM, GENE_EXTRACTOR_ID, new BlockItem(GENE_EXTRACTOR_BLOCK, itemSettings));
+        Energy.registerHolder(BaseMachineBlockEntity.class, (object) -> new GeneExtractorBlockEntity());
     }
 
     void registerAbilities() {
