@@ -22,6 +22,8 @@ import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.*;
+import net.minecraft.loot.LootTable;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.ScreenHandlerType;
@@ -35,8 +37,6 @@ import net.minecraft.util.registry.SimpleRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,7 +47,9 @@ public class NovaGenetica implements ModInitializer {
 
     public static final RegistryKey<Registry<Ability>> ABILITY_KEY = RegistryKey.ofRegistry(new Identifier(MOD_ID, "ability"));
     public static final Registry<Ability> ABILITY_REGISTRY = new SimpleRegistry<>(ABILITY_KEY, Lifecycle.stable());
-    private static Map<Identifier, NovaGeneticaConfig.PoweredMachineConfig> MACHINES_CONFIG_MAP;
+
+    public static final RegistryKey<Registry<LootTable>> LOOT_TABLE_REGISTRY_KEY = RegistryKey.ofRegistry(new Identifier(MOD_ID, "loot_table"));
+    public static final Registry<LootTable> LOOT_TABLE_REGISTRY = new SimpleRegistry<>(LOOT_TABLE_REGISTRY_KEY, Lifecycle.stable());
 
     public static final Identifier GENE_EXTRACTOR_ID = new Identifier(MOD_ID, "gene_extractor");
     public static NovaGeneticaMachineBlock GENE_EXTRACTOR_BLOCK;
@@ -93,15 +95,58 @@ public class NovaGenetica implements ModInitializer {
 
         registerAbilities();
 
-        //Register color providers
-        ColorProviderRegistry.ITEM.register(new NovaGeneticaItemColorProvider(), FILLED_SYRINGE_ITEM);
-        ColorProviderRegistry.ITEM.register(new NovaGeneticaItemColorProvider(), GENE_ITEM);
-        ColorProviderRegistry.ITEM.register(new NovaGeneticaItemColorProvider(), MOB_FLAKES);
+        registerColorProviders();
 
         //Loops over all abilities, and runs their onRegistry() logic
         ABILITY_REGISTRY.forEach(Ability::onRegistryServer);
 
         ITEM_GROUP = REGISTRATION_HELPER.buildGroup(ItemHelper.getGene(null, new Identifier(MOD_ID, "none"), true, false));
+    }
+
+    void registerColorProviders(){
+        // Gene
+        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> {
+            CompoundTag tag = stack.getTag();
+            if(tag != null){
+                if(tag.contains("entityType")){
+                    Identifier id = new Identifier(tag.getString("entityType"));
+                    return tintIndex == 1 ? RegistrationHelper.getEntityColor(id) : -1;
+                } else if (tag.contains("ability")){
+                    Identifier id = new Identifier(tag.getString("ability"));
+                    if(NovaGenetica.ABILITY_REGISTRY.containsId(id)){
+                        return tintIndex == 1 ? NovaGenetica.ABILITY_REGISTRY.get(id).getColor() : -1;
+                    }
+                }
+            }
+
+            return tintIndex == 1 ? 0xFFFFFF : -1;
+        }, GENE_ITEM);
+
+        //Filled Syringe
+        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> {
+            CompoundTag tag = stack.getTag();
+            if(tag != null){
+                if (tag.contains("ability")){
+                    Identifier id = new Identifier(tag.getString("ability"));
+                    if(NovaGenetica.ABILITY_REGISTRY.containsId(id)){
+                        return NovaGenetica.ABILITY_REGISTRY.get(id).getColor();
+                    }
+                } else if (tag.contains("uuid")){
+                    return 0xe83c1a;
+                }
+            }
+            return 0xFFFFFF;
+        }, FILLED_SYRINGE_ITEM);
+
+        ColorProviderRegistry.ITEM.register((stack, tintIndex) -> {
+            CompoundTag tag = stack.getTag();
+            if(tag != null) {
+                if(tag.contains("entityType")){
+                    return RegistrationHelper.getEntityColor(new Identifier(tag.getString("entityType")));
+                }
+            }
+            return 0xFFFFFF;
+        }, MOB_FLAKES);
     }
 
     void registerBlocks() {
@@ -117,32 +162,21 @@ public class NovaGenetica implements ModInitializer {
     }
 
     void registerAbilities() {
-        REGISTRATION_HELPER.register(
-                new AbilityEatGrass(),
-                new Identifier(MOD_ID, "eat_grass"),
-                REGISTRATION_HELPER.generateEntityTypeColorMap(
-                        Collections.singletonList(EntityType.SHEEP),
-                        Collections.singletonList(0xFFFFFF)
-                )
-        );
+        REGISTRATION_HELPER.register(new AbilityEatGrass(), new Identifier(MOD_ID, "eat_grass"));
+        REGISTRATION_HELPER.register(new AbilityResistance(), new Identifier(MOD_ID, "resistance"));
+        REGISTRATION_HELPER.register(new AbilityScareCreepers(), new Identifier(MOD_ID, "scare_creepers"));
 
-        REGISTRATION_HELPER.register(
-                new AbilityResistance(),
-                new Identifier(MOD_ID, "resistance"),
-                REGISTRATION_HELPER.generateEntityTypeColorMap(
-                        Arrays.asList(EntityType.ZOMBIE, EntityType.ZOMBIE_VILLAGER),
-                        Arrays.asList(0x276339, 0x276339)
-                )
-        );
+        REGISTRATION_HELPER.registerEntityColor(0xFFFFFF, EntityType.SHEEP);
+        REGISTRATION_HELPER.registerEntityColor(0xFFFFFF, EntityType.SHEEP);
+        REGISTRATION_HELPER.registerEntityColor(0xe09304, EntityType.OCELOT);
+        REGISTRATION_HELPER.registerEntityColor(0xe09304, EntityType.CAT);
+        REGISTRATION_HELPER.registerEntityColor(0xe09304, EntityType.CAT);
+        REGISTRATION_HELPER.registerEntityColor(0x15471a, EntityType.ZOMBIE);
+        REGISTRATION_HELPER.registerEntityColor(0x15471a, EntityType.ZOMBIE_VILLAGER);
+    }
 
-        REGISTRATION_HELPER.register(
-                new AbilityScareCreepers(),
-                new Identifier(MOD_ID, "scare_creepers"),
-                REGISTRATION_HELPER.generateEntityTypeColorMap(
-                        Arrays.asList(EntityType.OCELOT, EntityType.CAT),
-                        Arrays.asList(0xf2c26d, 0xf2ad35)
-                )
-        );
+    void registerLootTables(){
+
     }
 
     public static NovaGeneticaConfig getConfig() {

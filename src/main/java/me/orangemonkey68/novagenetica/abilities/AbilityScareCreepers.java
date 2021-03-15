@@ -1,20 +1,20 @@
 package me.orangemonkey68.novagenetica.abilities;
 
 import me.orangemonkey68.novagenetica.NovaGenetica;
+import net.minecraft.entity.EntityType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class AbilityScareCreepers implements Ability {
 
     @Override
     public String getTranslationKey() {
         return "ability.novagenetica.scare_creepers";
-    }
-
-    @Override
-    public int getRarity() {
-        return 2;
     }
 
     @Override
@@ -35,6 +35,16 @@ public class AbilityScareCreepers implements Ability {
     @Override
     public void onRegistryClient() {
 
+    }
+
+    @Override
+    public int getLootTableWeight() {
+        return 60;
+    }
+
+    @Override
+    public Set<EntityType> getEntityTypes() {
+        return new HashSet<>(Arrays.asList(EntityType.SHEEP, EntityType.OCELOT));
     }
 
     @Override

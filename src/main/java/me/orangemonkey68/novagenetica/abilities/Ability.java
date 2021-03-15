@@ -7,6 +7,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
 import java.util.List;
@@ -31,13 +32,6 @@ public interface Ability {
     }
 
     /**
-     * The rarity is used to determine how hard it is to get an ability. The higher this value, the lower the chance is to get the ability.
-     * Calculated with {@code 1/getRarity()}, unless {@code getRarity() == 0}, in which case it will never drop.
-     * @return The rarity score
-     */
-    int getRarity();
-
-    /**
      *
      * This number should <b>always</b> be even. If it isn't, an {@link IllegalStateException} will be logged and it will be removed from the registry.
      * @return The number of genes needed to create one "Completed Gene".
@@ -59,6 +53,10 @@ public interface Ability {
      * This code is run in {@link NovaGeneticaClient#onInitializeClient()}, and it's recommended to register any client packet recievers in this function.
      */
     void onRegistryClient();
+
+    int getLootTableWeight();
+
+    Set<EntityType> getEntityTypes();
 
     /**
      * This code is run when the player injects the ability into themself.

@@ -19,8 +19,6 @@ public class ItemHelper {
         ItemStack stack = new ItemStack(NovaGenetica.FILLED_SYRINGE_ITEM);
         CompoundTag tag = new CompoundTag();
         tag.putString("ability", abilityId.toString());
-        Ability ability = NovaGenetica.ABILITY_REGISTRY.get(abilityId);
-        tag.putInt("color", ability != null ? ability.getColor() : 0xFFFFFF);
         stack.setTag(tag);
 
         return stack;
@@ -37,7 +35,6 @@ public class ItemHelper {
 
         if(Registry.ENTITY_TYPE.containsId(entityTypeId)){
             tag.putString("entityType", entityTypeId.toString());
-            tag.putInt("color", RegistrationHelper.ENTITY_TYPE_COLOR_MAP.get(Registry.ENTITY_TYPE.get(entityTypeId)));
         }
 
         //complete?

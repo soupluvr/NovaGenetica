@@ -2,8 +2,12 @@ package me.orangemonkey68.novagenetica.abilities;
 
 import me.orangemonkey68.novagenetica.NovaGenetica;
 import me.orangemonkey68.novagenetica.client.NovaGeneticaClient;
+import net.minecraft.entity.EntityType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.TranslatableText;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class AbilityNone implements Ability {
     /**
@@ -12,17 +16,6 @@ public class AbilityNone implements Ability {
     @Override
     public String getTranslationKey() {
         return "ability.novagenetica.none";
-    }
-
-    /**
-     * The rarity is used to determine how hard it is to get an ability. The higher this value, the lower the chance is to get the ability.
-     * Calculated with {@code 1/getRarity()}, unless {@code getRarity() == 0}, in which case it will never drop.
-     *
-     * @return The rarity score
-     */
-    @Override
-    public int getRarity() {
-        return 0;
     }
 
     /**
@@ -59,6 +52,16 @@ public class AbilityNone implements Ability {
     @Override
     public void onRegistryClient() {
 
+    }
+
+    @Override
+    public int getLootTableWeight() {
+        return 0;
+    }
+
+    @Override
+    public Set<EntityType> getEntityTypes() {
+        return new HashSet<>();
     }
 
     /**

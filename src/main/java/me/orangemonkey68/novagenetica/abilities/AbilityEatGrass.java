@@ -4,6 +4,7 @@ import me.orangemonkey68.novagenetica.NovaGenetica;
 import me.orangemonkey68.novagenetica.NovaGeneticaPlayer;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.HungerManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -16,15 +17,14 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 public class AbilityEatGrass implements Ability, UseBlockCallback {
     @Override
     public String getTranslationKey() {
         return "ability.novagenetica.eat_grass";
-    }
-
-    @Override
-    public int getRarity() {
-        return 1;
     }
 
     @Override
@@ -45,6 +45,16 @@ public class AbilityEatGrass implements Ability, UseBlockCallback {
     @Override
     public void onRegistryClient() {
 
+    }
+
+    @Override
+    public int getLootTableWeight() {
+        return 90;
+    }
+
+    @Override
+    public Set<EntityType> getEntityTypes() {
+        return new HashSet<>(Arrays.asList(EntityType.SHEEP));
     }
 
     /**

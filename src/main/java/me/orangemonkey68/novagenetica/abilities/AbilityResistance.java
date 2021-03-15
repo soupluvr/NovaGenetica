@@ -1,20 +1,20 @@
 package me.orangemonkey68.novagenetica.abilities;
 
 import me.orangemonkey68.novagenetica.NovaGenetica;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.server.network.ServerPlayerEntity;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class AbilityResistance implements Ability{
 
     @Override
     public String getTranslationKey() {
         return "ability.novagenetica.resistance";
-    }
-
-    @Override
-    public int getRarity() {
-        return 23;
     }
 
     @Override
@@ -35,6 +35,16 @@ public class AbilityResistance implements Ability{
     @Override
     public void onRegistryClient() {
 
+    }
+
+    @Override
+    public int getLootTableWeight() {
+        return 50;
+    }
+
+    @Override
+    public Set<EntityType> getEntityTypes() {
+        return new HashSet<>(Arrays.asList(EntityType.ZOMBIE, EntityType.ZOMBIE_VILLAGER, EntityType.ZOMBIFIED_PIGLIN));
     }
 
     @Override

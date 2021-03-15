@@ -5,6 +5,7 @@ import me.orangemonkey68.novagenetica.NovaGeneticaEntityType;
 import me.orangemonkey68.novagenetica.abilities.Ability;
 import me.orangemonkey68.novagenetica.abilities.AbilityValidator;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.minecraft.command.argument.ItemSlotArgumentType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -21,7 +22,7 @@ public class RegistrationHelper {
     /**
      * A map of each EntityTypee and the set of abilities they can drop
      */
-    public static final Map<EntityType<?>, Set<Ability>> ENTITY_TYPE_ABILITY_MAP = new HashMap<>();
+    public static final Map<EntityType<?>, HashMap<Ability, Integer>> ENTITY_TYPE_ABILITY_WEIGHT_MAP = new HashMap<>();
     /**
      * A map of each EntityType and their color
      */
@@ -47,9 +48,8 @@ public class RegistrationHelper {
      * Registers all the genes, abilities, syringes, and other items for you.
      * @param ability the {@link Ability} to register.
      * @param abilityId the {@link Identifier} of the ability.
-     * @param entityTypeColorMap a map of all the entityTypes that can drop this ability, and the colors their {@code Mob Flakes} should be
      */
-    public void register(Ability ability, Identifier abilityId, Map<EntityType<?>, Integer> entityTypeColorMap){
+    public void register(Ability ability, Identifier abilityId){
         if(!AbilityValidator.validate(ability)) {
             NovaGenetica.LOGGER.error("Ability: \"{}\" has failed a check. Submit a bug report to the mod authors!", abilityId);
             return;
@@ -61,28 +61,67 @@ public class RegistrationHelper {
         ItemStack syringe = ItemHelper.getSyringe(abilityId);
         addItemToGroup(Subsection.SYRINGE, syringe);
 
+        ability.getEntityTypes().forEach(type -> {
+            //put the submap if it doesn't exist
+            ENTITY_TYPE_ABILITY_WEIGHT_MAP.putIfAbsent(type, new HashMap<>());
+            //put the ability and weight
+            ENTITY_TYPE_ABILITY_WEIGHT_MAP.get(type).put(ability, ability.getLootTableWeight());
+
+            ItemStack incompleteGene = ItemHelper.getGene(Registry.ENTITY_TYPE.getId(type), null, false, false);
+
+            if(!itemMap.get(Subsection.INCOMPLETE_GENE).contains(incompleteGene)){
+                itemMap.get(Subsection.INCOMPLETE_GENE).add(incompleteGene);
+            }
+        });
+
         //Genes need all of the Abilities to be registered, so they're registered in the build function
         //Loops over given EntityTypes and registers their colors and maps their colors, and registers a Mob Flake
-        entityTypeColorMap.forEach((type, mobColor) -> {
-            if(!ENTITY_TYPE_ABILITY_MAP.containsKey(type))
-                ENTITY_TYPE_ABILITY_MAP.put(type, new HashSet<>());
-            ENTITY_TYPE_ABILITY_MAP.get(type).add(ability);
-
-            if(!ENTITY_TYPE_COLOR_MAP.containsKey(type)){
-                ENTITY_TYPE_COLOR_MAP.put(type, mobColor);
-                addItemToGroup(Subsection.INCOMPLETE_GENE, ItemHelper.getGene(Registry.ENTITY_TYPE.getId(type), null, false, false));
-                addItemToGroup(Subsection.MOB_FLAKES, ItemHelper.getMobFlakes(Registry.ENTITY_TYPE.getId(type)));
-            }
-
-        });
+//        entityTypeColorMap.forEach((type, mobColor) -> {
+//            if(!ENTITY_TYPE_ABILITY_MAP.containsKey(type))
+//                ENTITY_TYPE_ABILITY_MAP.put(type, new HashSet<>());
+//            ENTITY_TYPE_ABILITY_MAP.get(type).add(ability);
+//
+//            if(!ENTITY_TYPE_COLOR_MAP.containsKey(type)){
+//                ENTITY_TYPE_COLOR_MAP.put(type, mobColor);
+//                addItemToGroup(Subsection.INCOMPLETE_GENE, ItemHelper.getGene(Registry.ENTITY_TYPE.getId(type), null, false, false));
+//                addItemToGroup(Subsection.MOB_FLAKES, ItemHelper.getMobFlakes(Registry.ENTITY_TYPE.getId(type)));
+//            }
+//
+//        });
 
         addItemToGroup(Subsection.COMPLETE_GENE, ItemHelper.getGene(null, abilityId, true, true));
 
         //Adds to Ability.ABILITY_ENTITY_MAP
-        Ability.ABILITY_ENTITY_MAP.put(ability, entityTypeColorMap.keySet());
+        Ability.ABILITY_ENTITY_MAP.put(ability, ENTITY_TYPE_COLOR_MAP.keySet());
 
         //Register abilities to entity
-        entityTypeColorMap.forEach((type, entityColor) -> ((NovaGeneticaEntityType)type).registerAbility(ability));
+        ENTITY_TYPE_COLOR_MAP.forEach((type, entityColor) -> ((NovaGeneticaEntityType)type).registerAbility(ability));
+    }
+
+    public void registerEntityColor(int color, EntityType<?> entityType){
+        ENTITY_TYPE_COLOR_MAP.put(entityType, color);
+    }
+
+    /**
+     * Gets the color of any entity registered with {@link #registerEntityColor(int, EntityType)}
+     * @param entityType the {@link EntityType} to query
+     * @return the color if registerred, otherwise it will return {@code 0xFFFFFF}
+     */
+    public static int getEntityColor(EntityType<?> entityType){
+        return ENTITY_TYPE_COLOR_MAP.getOrDefault(entityType, 0xFFFFFF);
+    }
+
+    /**
+     * Gets the color of any entity registered with {@link #registerEntityColor(int, EntityType)}
+     * @param id the Identifier of the {@link EntityType}
+     * @return the color if registerred, otheriwse it will return {@code 0xFFFFFF}
+     */
+    public static int getEntityColor(Identifier id){
+        if(Registry.ENTITY_TYPE.containsId(id) && ENTITY_TYPE_COLOR_MAP.containsKey(Registry.ENTITY_TYPE.get(id))){
+            return ENTITY_TYPE_COLOR_MAP.get(Registry.ENTITY_TYPE.get(id));
+        }
+        
+        return 0xFFFFFF;
     }
 
     /**
@@ -118,7 +157,7 @@ public class RegistrationHelper {
     }
 
     /**
-     * Generates a map of {@link EntityType}s and colors for use in {@link #register(Ability, Identifier, Map)}
+     * Generates a map of {@link EntityType}s and colors for use in {@link #register(Ability, Identifier)}
      * @param types a {@link List} of {@link EntityType}s
      * @param colors a {@link List} of colors, represented in {@code 0xRRGGBB} format
      * @return a {@link HashMap} of each EntityType : int pair
