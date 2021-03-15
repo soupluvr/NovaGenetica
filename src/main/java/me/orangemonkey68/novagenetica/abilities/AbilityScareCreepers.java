@@ -44,7 +44,7 @@ public class AbilityScareCreepers implements Ability {
 
     @Override
     public Set<EntityType> getEntityTypes() {
-        return new HashSet<>(Arrays.asList(EntityType.SHEEP, EntityType.OCELOT));
+        return new HashSet<>(Arrays.asList(EntityType.CAT, EntityType.OCELOT));
     }
 
     @Override

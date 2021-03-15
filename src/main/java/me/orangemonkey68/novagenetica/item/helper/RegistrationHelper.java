@@ -67,10 +67,17 @@ public class RegistrationHelper {
             //put the ability and weight
             ENTITY_TYPE_ABILITY_WEIGHT_MAP.get(type).put(ability, ability.getLootTableWeight());
 
-            ItemStack incompleteGene = ItemHelper.getGene(Registry.ENTITY_TYPE.getId(type), null, false, false);
+            Identifier typeId = Registry.ENTITY_TYPE.getId(type);
+
+            ItemStack incompleteGene = ItemHelper.getGene(typeId, null, false, false);
 
             if(!itemMap.get(Subsection.INCOMPLETE_GENE).contains(incompleteGene)){
                 itemMap.get(Subsection.INCOMPLETE_GENE).add(incompleteGene);
+            }
+
+            ItemStack mobFlake = ItemHelper.getMobFlakes(typeId);
+            if(!itemMap.get(Subsection.MOB_FLAKES).contains(mobFlake)){
+                itemMap.get(Subsection.MOB_FLAKES).add(mobFlake);
             }
         });
 

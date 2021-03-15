@@ -16,6 +16,7 @@ import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Material;
@@ -48,8 +49,7 @@ public class NovaGenetica implements ModInitializer {
     public static final RegistryKey<Registry<Ability>> ABILITY_KEY = RegistryKey.ofRegistry(new Identifier(MOD_ID, "ability"));
     public static final Registry<Ability> ABILITY_REGISTRY = new SimpleRegistry<>(ABILITY_KEY, Lifecycle.stable());
 
-    public static final RegistryKey<Registry<LootTable>> LOOT_TABLE_REGISTRY_KEY = RegistryKey.ofRegistry(new Identifier(MOD_ID, "loot_table"));
-    public static final Registry<LootTable> LOOT_TABLE_REGISTRY = new SimpleRegistry<>(LOOT_TABLE_REGISTRY_KEY, Lifecycle.stable());
+
 
     public static final Identifier GENE_EXTRACTOR_ID = new Identifier(MOD_ID, "gene_extractor");
     public static NovaGeneticaMachineBlock GENE_EXTRACTOR_BLOCK;
@@ -96,6 +96,13 @@ public class NovaGenetica implements ModInitializer {
         registerAbilities();
 
         registerColorProviders();
+
+        //register a listener for when the world is loaded.
+        //At this point we know that all mods have been loaded and registerred abilities
+        //Here we can finalize all of the loottables.
+        ServerWorldEvents.LOAD.register((server, world) -> {
+
+        });
 
         //Loops over all abilities, and runs their onRegistry() logic
         ABILITY_REGISTRY.forEach(Ability::onRegistryServer);
@@ -166,7 +173,6 @@ public class NovaGenetica implements ModInitializer {
         REGISTRATION_HELPER.register(new AbilityResistance(), new Identifier(MOD_ID, "resistance"));
         REGISTRATION_HELPER.register(new AbilityScareCreepers(), new Identifier(MOD_ID, "scare_creepers"));
 
-        REGISTRATION_HELPER.registerEntityColor(0xFFFFFF, EntityType.SHEEP);
         REGISTRATION_HELPER.registerEntityColor(0xFFFFFF, EntityType.SHEEP);
         REGISTRATION_HELPER.registerEntityColor(0xe09304, EntityType.OCELOT);
         REGISTRATION_HELPER.registerEntityColor(0xe09304, EntityType.CAT);

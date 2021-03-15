@@ -3,6 +3,7 @@ package me.orangemonkey68.novagenetica.blockentity;
 import me.orangemonkey68.novagenetica.NovaGenetica;
 import me.orangemonkey68.novagenetica.gui.GeneExtractorGuiDescription;
 import me.orangemonkey68.novagenetica.item.MobFlakesItem;
+import me.orangemonkey68.novagenetica.item.helper.ItemHelper;
 import net.minecraft.command.argument.ItemSlotArgumentType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -52,7 +53,7 @@ public class GeneExtractorBlockEntity extends BaseMachineBlockEntity {
                 itemStacks.set(0, ItemStack.EMPTY);
             }
 
-            itemStacks.set(1, new ItemStack(Items.STONE));
+            itemStacks.set(1, getOutput(inputStack));
             markDirty();
         }
     }
@@ -67,6 +68,15 @@ public class GeneExtractorBlockEntity extends BaseMachineBlockEntity {
         }
 
         return false;
+    }
+
+    ItemStack getOutput(ItemStack input){
+        CompoundTag tag = input.getTag();
+        if(tag.contains("entityType")){
+            return ItemHelper.getGene(new Identifier(tag.getString("entityType")), null, false, false);
+        }
+        //this should literally never run
+        return ItemStack.EMPTY;
     }
 
     @Override
