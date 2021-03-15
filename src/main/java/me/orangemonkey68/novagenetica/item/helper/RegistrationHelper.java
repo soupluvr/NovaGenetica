@@ -74,21 +74,6 @@ public class RegistrationHelper {
             }
         });
 
-        //Genes need all of the Abilities to be registered, so they're registered in the build function
-        //Loops over given EntityTypes and registers their colors and maps their colors, and registers a Mob Flake
-//        entityTypeColorMap.forEach((type, mobColor) -> {
-//            if(!ENTITY_TYPE_ABILITY_MAP.containsKey(type))
-//                ENTITY_TYPE_ABILITY_MAP.put(type, new HashSet<>());
-//            ENTITY_TYPE_ABILITY_MAP.get(type).add(ability);
-//
-//            if(!ENTITY_TYPE_COLOR_MAP.containsKey(type)){
-//                ENTITY_TYPE_COLOR_MAP.put(type, mobColor);
-//                addItemToGroup(Subsection.INCOMPLETE_GENE, ItemHelper.getGene(Registry.ENTITY_TYPE.getId(type), null, false, false));
-//                addItemToGroup(Subsection.MOB_FLAKES, ItemHelper.getMobFlakes(Registry.ENTITY_TYPE.getId(type)));
-//            }
-//
-//        });
-
         addItemToGroup(Subsection.COMPLETE_GENE, ItemHelper.getGene(null, abilityId, true, true));
 
         //Adds to Ability.ABILITY_ENTITY_MAP
