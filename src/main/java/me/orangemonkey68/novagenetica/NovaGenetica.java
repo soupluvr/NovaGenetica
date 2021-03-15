@@ -57,11 +57,6 @@ public class NovaGenetica implements ModInitializer {
     public static ScreenHandlerType<GeneExtractorGuiDescription> GENE_EXTRACTOR_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(GENE_EXTRACTOR_ID, ((syncId, inventory) -> new GeneExtractorGuiDescription(syncId, inventory, ScreenHandlerContext.EMPTY)));
     public static BlockItem GENE_EXTRACTOR_ITEM;
 
-    public static Identifier progressBarBackground = new Identifier(MOD_ID, "textures/gui/progress_bar_background.png");
-    public static Identifier progressBarComplete = new Identifier(MOD_ID, "textures/gui/progress_bar_complete.png");
-    public static Identifier powerBarBackground = new Identifier(MOD_ID, "textures/gui/power_bar_background.png");
-    public static Identifier powerBarComplete = new Identifier(MOD_ID, "textures/gui/power_bar_complete.png");
-
 
     public static ItemGroup ITEM_GROUP;
     public static final Item EMPTY_SYRINGE_ITEM = Registry.register(Registry.ITEM, new Identifier(MOD_ID, "empty_syringe"), new EmptySyringeItem(new Item.Settings().maxCount(16)));

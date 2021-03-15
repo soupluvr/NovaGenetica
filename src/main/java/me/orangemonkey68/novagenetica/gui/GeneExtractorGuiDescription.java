@@ -12,30 +12,23 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.text.LiteralText;
 
-public class GeneExtractorGuiDescription extends SyncedGuiDescription {
+public class GeneExtractorGuiDescription extends BaseMachineGuiDescription {
 
     public GeneExtractorGuiDescription(int syncId, PlayerInventory playerInventory, ScreenHandlerContext ctx) {
-        super(NovaGenetica.GENE_EXTRACTOR_SCREEN_HANDLER, syncId, playerInventory, getBlockInventory(ctx, 2), getBlockPropertyDelegate(ctx, 4));
+        super(NovaGenetica.GENE_EXTRACTOR_SCREEN_HANDLER, syncId, playerInventory, ctx, 0, 2);
         WGridPanel root = new WGridPanel();
         setRootPanel(root);
         root.setSize(150, 180);
-        root.add(this.createPlayerInventoryPanel(), 0, 5);
 
-        WItemSlot itemSlot = WItemSlot.of(blockInventory, 0);
+        //add power and progress bars
+        addProgressBar(4, 2);
+        addPowerBar(0, 1, 1, 3);
 
-        WItemSlot outputSlot = new WItemSlot(blockInventory, 1, 1, 1, true);
-        outputSlot.setInsertingAllowed(false);
+        //add input and output slots
+        addItemSlot(2, 2, 0);
+        addItemSlot(6, 2, new WItemSlot(blockInventory, 1, 1, 1, true));
 
-        root.add(itemSlot, 2, 2);
-        root.add(outputSlot, 6, 2);
-
-        WBar progressBar = new WBar(NovaGenetica.progressBarBackground, NovaGenetica.progressBarComplete, BaseMachineBlockEntity.PROGRESS_INDEX, BaseMachineBlockEntity.MAX_PROGRESS_INDEX, WBar.Direction.RIGHT);
-        root.add(progressBar, 4, 2);
-
-        WPowerBar powerBar = new WPowerBar(NovaGenetica.powerBarBackground, NovaGenetica.powerBarComplete, BaseMachineBlockEntity.STORED_POWER, BaseMachineBlockEntity.MAX_STORED_POWER, WBar.Direction.UP);
-//        powerBar.withTooltip(new LiteralText(propertyDelegate.get(BaseMachineBlockEntity.STORED_POWER) + "/" + NovaGenetica.getConfig().machineConfig.maxStoredPower));
-        root.add(powerBar, 0, 1, 1, 3);
-
+        addPlayerInv(0, 5);
 
         root.validate(this);
     }
