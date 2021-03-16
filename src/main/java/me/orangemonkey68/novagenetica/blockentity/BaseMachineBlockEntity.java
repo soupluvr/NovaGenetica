@@ -11,9 +11,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SidedInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.PropertyDelegate;
@@ -27,7 +25,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
-import team.reborn.energy.EnergyHolder;
 import team.reborn.energy.EnergySide;
 import team.reborn.energy.EnergyStorage;
 import team.reborn.energy.EnergyTier;
@@ -119,7 +116,7 @@ public abstract class BaseMachineBlockEntity extends BlockEntity implements
         int maxProgress = getProcessingTime();
 
         //Draw power
-        if(isValid(0, itemStacks.get(0)) && storedPower >= powerStep && progress <= maxProgress && (itemStacks.get(1) == ItemStack.EMPTY || itemStacks.get(1).getItem() == Items.AIR)){
+        if(isValid(0, itemStacks.get(0)) && storedPower >= powerStep && progress <= maxProgress && isValid(1, itemStacks.get(1))){
             progress++;
             storedPower -= powerStep;
         } else {

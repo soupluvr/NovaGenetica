@@ -6,7 +6,6 @@ import me.orangemonkey68.novagenetica.NovaGeneticaEntityType;
 import me.orangemonkey68.novagenetica.abilities.Ability;
 import me.orangemonkey68.novagenetica.abilities.AbilityValidator;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
-import net.minecraft.command.argument.ItemSlotArgumentType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -70,7 +69,7 @@ public class RegistrationHelper {
 
             Identifier typeId = Registry.ENTITY_TYPE.getId(type);
 
-            LootTableManager.register(Registry.ENTITY_TYPE.getId(type), ability);
+            LootTableManager.registerLootEntry(Registry.ENTITY_TYPE.getId(type), ability);
 
             ItemStack incompleteGene = ItemHelper.getGene(typeId, null, false, false);
 

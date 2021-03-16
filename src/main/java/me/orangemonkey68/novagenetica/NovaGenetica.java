@@ -7,8 +7,9 @@ import me.orangemonkey68.novagenetica.abilities.AbilityResistance;
 import me.orangemonkey68.novagenetica.abilities.AbilityScareCreepers;
 import me.orangemonkey68.novagenetica.block.NovaGeneticaMachineBlock;
 import me.orangemonkey68.novagenetica.blockentity.BaseMachineBlockEntity;
+import me.orangemonkey68.novagenetica.blockentity.GeneAnalyzerBlockEntity;
 import me.orangemonkey68.novagenetica.blockentity.GeneExtractorBlockEntity;
-import me.orangemonkey68.novagenetica.gui.GeneExtractorGuiDescription;
+import me.orangemonkey68.novagenetica.gui.Generic1x1GuiDescription;
 import me.orangemonkey68.novagenetica.item.*;
 import me.orangemonkey68.novagenetica.item.helper.ItemHelper;
 import me.orangemonkey68.novagenetica.item.helper.RegistrationHelper;
@@ -19,18 +20,14 @@ import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.*;
-import net.minecraft.loot.LootTable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Lazy;
 import net.minecraft.util.registry.Registry;
@@ -39,10 +36,6 @@ import net.minecraft.util.registry.SimpleRegistry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import team.reborn.energy.Energy;
-import team.reborn.energy.EnergyStorage;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class NovaGenetica implements ModInitializer {
     public static final String MOD_ID = "novagenetica";
@@ -52,14 +45,17 @@ public class NovaGenetica implements ModInitializer {
     public static final RegistryKey<Registry<Ability>> ABILITY_KEY = RegistryKey.ofRegistry(new Identifier(MOD_ID, "ability"));
     public static final Registry<Ability> ABILITY_REGISTRY = new SimpleRegistry<>(ABILITY_KEY, Lifecycle.stable());
 
-
+    public static final ScreenHandlerType<Generic1x1GuiDescription> GENERIC_1X1_SCREEN_HANDLER_TYPE = ScreenHandlerRegistry.registerSimple(new Identifier(MOD_ID, "generic_one_by_one"), ((syncId, inventory) -> new Generic1x1GuiDescription(syncId, inventory,ScreenHandlerContext.EMPTY)));
 
     public static final Identifier GENE_EXTRACTOR_ID = new Identifier(MOD_ID, "gene_extractor");
     public static NovaGeneticaMachineBlock GENE_EXTRACTOR_BLOCK;
-    public static BlockEntityType<GeneExtractorBlockEntity> GENE_EXTRACTOR_BLOCK_ENTITY;
-    public static ScreenHandlerType<GeneExtractorGuiDescription> GENE_EXTRACTOR_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(GENE_EXTRACTOR_ID, ((syncId, inventory) -> new GeneExtractorGuiDescription(syncId, inventory, ScreenHandlerContext.EMPTY)));
+    public static BlockEntityType<GeneExtractorBlockEntity> GENE_EXTRACTOR_BLOCK_ENTITY_TYPE;
     public static BlockItem GENE_EXTRACTOR_ITEM;
 
+    public static final Identifier GENE_ANALYZER_ID = new Identifier(MOD_ID, "gene_analyzer");
+    public static NovaGeneticaMachineBlock GENE_ANALYZER_BLOCK;
+    public static BlockEntityType<GeneAnalyzerBlockEntity> GENE_ANALYZER_BLOCK_ENTITY_TYPE;
+    public static BlockItem GENE_ANALYZER_ITEM;
 
     public static ItemGroup ITEM_GROUP;
     public static final Item EMPTY_SYRINGE_ITEM = Registry.register(Registry.ITEM, new Identifier(MOD_ID, "empty_syringe"), new EmptySyringeItem(new Item.Settings().maxCount(16)));
@@ -87,8 +83,6 @@ public class NovaGenetica implements ModInitializer {
         REGISTRATION_HELPER.addItemToGroup(RegistrationHelper.Subsection.START, new ItemStack(MOB_SCRAPER_ITEM));
         REGISTRATION_HELPER.addItemToGroup(RegistrationHelper.Subsection.START, new ItemStack(EMPTY_SYRINGE_ITEM));
 
-        REGISTRATION_HELPER.addItemToGroup(RegistrationHelper.Subsection.MACHINE, new ItemStack(GENE_EXTRACTOR_ITEM));
-
         ServerLifecycleEvents.SERVER_STARTING.register(server -> SERVER_INSTANCE = server);
 
         registerAbilities();
@@ -96,11 +90,9 @@ public class NovaGenetica implements ModInitializer {
         registerColorProviders();
 
         //register a listener for when the world is loaded.
-        //At this point we know that all mods have been loaded and registerred abilities
-        //Here we can finalize all of the loottables.
-        ServerWorldEvents.LOAD.register((server, world) -> {
-
-        });
+        //At this point we know that all mods have been loaded and registered abilities
+        //Here we can finalize all of the loot tables.
+        ServerWorldEvents.LOAD.register((server, world) -> LootTableManager.build());
 
         //Loops over all abilities, and runs their onRegistry() logic
         ABILITY_REGISTRY.forEach(Ability::onRegistryServer);
@@ -108,6 +100,7 @@ public class NovaGenetica implements ModInitializer {
         ITEM_GROUP = REGISTRATION_HELPER.buildGroup(ItemHelper.getGene(null, new Identifier(MOD_ID, "none"), true, false));
     }
 
+    @SuppressWarnings("ConstantConditions")
     void registerColorProviders(){
         // Gene
         ColorProviderRegistry.ITEM.register((stack, tintIndex) -> {
@@ -155,16 +148,23 @@ public class NovaGenetica implements ModInitializer {
     }
 
     void registerBlocks() {
-        AbstractBlock.Settings blockSettings = AbstractBlock.Settings.of(Material.METAL).sounds(BlockSoundGroup.NETHERITE).strength(1200f, 50f).requiresTool();
+        Energy.registerHolder(BaseMachineBlockEntity.class, (object) -> new GeneExtractorBlockEntity());
+
         Item.Settings itemSettings = new Item.Settings().fireproof();
 
-        NovaGeneticaMachineBlock geneExtractorBlock = new NovaGeneticaMachineBlock(blockSettings);
-
+        NovaGeneticaMachineBlock geneExtractorBlock = new NovaGeneticaMachineBlock();
         geneExtractorBlock.setBlockEntity(GeneExtractorBlockEntity::new);
         GENE_EXTRACTOR_BLOCK = Registry.register(Registry.BLOCK, GENE_EXTRACTOR_ID, geneExtractorBlock);
-        GENE_EXTRACTOR_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, GENE_EXTRACTOR_ID, BlockEntityType.Builder.create(GeneExtractorBlockEntity::new, GENE_EXTRACTOR_BLOCK).build(null));
+        GENE_EXTRACTOR_BLOCK_ENTITY_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, GENE_EXTRACTOR_ID, BlockEntityType.Builder.create(GeneExtractorBlockEntity::new, GENE_EXTRACTOR_BLOCK).build(null));
         GENE_EXTRACTOR_ITEM = Registry.register(Registry.ITEM, GENE_EXTRACTOR_ID, new BlockItem(GENE_EXTRACTOR_BLOCK, itemSettings));
-        Energy.registerHolder(BaseMachineBlockEntity.class, (object) -> new GeneExtractorBlockEntity());
+        REGISTRATION_HELPER.addItemToGroup(RegistrationHelper.Subsection.MACHINE, new ItemStack(GENE_EXTRACTOR_ITEM));
+
+        NovaGeneticaMachineBlock geneAnalyzerBlock = new NovaGeneticaMachineBlock();
+        geneAnalyzerBlock.setBlockEntity(GeneAnalyzerBlockEntity::new);
+        GENE_ANALYZER_BLOCK = Registry.register(Registry.BLOCK, GENE_ANALYZER_ID, geneAnalyzerBlock);
+        GENE_ANALYZER_BLOCK_ENTITY_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, GENE_ANALYZER_ID, BlockEntityType.Builder.create(GeneAnalyzerBlockEntity::new, GENE_ANALYZER_BLOCK).build(null));
+        GENE_ANALYZER_ITEM = Registry.register(Registry.ITEM, GENE_ANALYZER_ID, new BlockItem(GENE_ANALYZER_BLOCK, itemSettings));
+        REGISTRATION_HELPER.addItemToGroup(RegistrationHelper.Subsection.MACHINE, new ItemStack(GENE_ANALYZER_ITEM));
     }
 
     void registerAbilities() {

@@ -3,12 +3,10 @@ package me.orangemonkey68.novagenetica;
 import com.mojang.serialization.Lifecycle;
 import me.orangemonkey68.novagenetica.abilities.Ability;
 import me.orangemonkey68.novagenetica.item.helper.ItemHelper;
-import net.fabricmc.fabric.api.loot.v1.FabricLootPoolBuilder;
-import net.minecraft.entity.EntityType;
 import net.minecraft.loot.ConstantLootTableRange;
+import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.entry.ItemEntry;
-import net.minecraft.loot.function.LootFunction;
 import net.minecraft.loot.function.SetNbtLootFunction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
@@ -17,34 +15,59 @@ import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.util.registry.SimpleRegistry;
 
 import java.util.HashMap;
-import java.util.IdentityHashMap;
 import java.util.Map;
 
 public class LootTableManager {
     public static final RegistryKey<Registry<LootTable>> LOOT_TABLE_REGISTRY_KEY = RegistryKey.ofRegistry(new Identifier(NovaGenetica.MOD_ID, "loot_table"));
-    public static final Registry<LootTable> LOOT_TABLE_REGISTRY = new SimpleRegistry<>(LOOT_TABLE_REGISTRY_KEY, Lifecycle.stable());
+    public static Registry<LootTable> LOOT_TABLE_REGISTRY = null;
 
-    private static final Map<Identifier, FabricLootPoolBuilder> PRE_ENTITY_LOOT_POOL_MAP = new HashMap<>();
+    private static final Map<Identifier, LootPool.Builder> PRE_ENTITY_LOOT_POOL_MAP = new HashMap<>();
 
-    //NOTE: I'm 99% sure FabricLootPoolBuilder is mutable
-    public static void register(Identifier entityTypeId, Ability ability){
+    /**
+     * Registers a loot entry for any given entity type and ability.
+     * @param entityTypeId the ID of the entity type
+     * @param ability the ability to register
+     */
+    public static void registerLootEntry(Identifier entityTypeId, Ability ability){
+        NovaGenetica.LOGGER.info("Adding ability entry \"{}\" to entity type \"{}\"", NovaGenetica.ABILITY_REGISTRY.getId(ability), entityTypeId.toString());
+
         //add new builder if key doesn't exist
-        PRE_ENTITY_LOOT_POOL_MAP.putIfAbsent(entityTypeId, getBuilder());
+        PRE_ENTITY_LOOT_POOL_MAP.putIfAbsent(entityTypeId, LootPool.builder());
+        //get loot pool builder we just added
+        LootPool.Builder poolBuilder = PRE_ENTITY_LOOT_POOL_MAP.get(entityTypeId);
 
-        FabricLootPoolBuilder builder = PRE_ENTITY_LOOT_POOL_MAP.get(entityTypeId);
+        //get the NBT of the correct ItemStack
+        CompoundTag nbt = ItemHelper.getGene(null, NovaGenetica.ABILITY_REGISTRY.getId(ability), false, false).getTag();
+        //Makes an ItemEntryBuilder of a GeneItem
+        ItemEntry.Builder entryBuilder = ItemEntry.builder(NovaGenetica.GENE_ITEM);
+        //adds a "set nbt data" function to the table
+        entryBuilder.apply(SetNbtLootFunction.builder(nbt));
 
-        CompoundTag nbt = ItemHelper.getGene(entityTypeId, null, false, false).getTag();
+        //set entry weight to that of the ability
+        //TODO: Research how these tables work a bit more, and see if I need to rebalance these weights on compile
+        entryBuilder.weight(ability.getLootTableWeight());
 
         //Adds item entry
-        builder.withEntry(
-                ItemEntry.builder(NovaGenetica.GENE_ITEM)  // creates builder
-                .weight(ability.getLootTableWeight())      // set weight to ability weight
-                .apply(SetNbtLootFunction.builder(nbt))    // adds a function to set the nbt to the correct values
-                .build()
-        );
+        poolBuilder.rolls(ConstantLootTableRange.create(1));
+        //Adds entry to pool
+        poolBuilder.with(entryBuilder);
     }
 
-    private static FabricLootPoolBuilder getBuilder(){
-        return FabricLootPoolBuilder.builder().rolls(ConstantLootTableRange.create(1));
+    /**
+     * Builds the LOOT_TABLE_REGISTRY on world load.
+     */
+    public static void build(){
+        //we only wanna run this once
+        if(LOOT_TABLE_REGISTRY != null) return;
+
+        NovaGenetica.LOGGER.info(PRE_ENTITY_LOOT_POOL_MAP.toString());
+
+        LOOT_TABLE_REGISTRY = new SimpleRegistry<>(LOOT_TABLE_REGISTRY_KEY, Lifecycle.stable());
+
+        PRE_ENTITY_LOOT_POOL_MAP.forEach((id, poolBuilder) -> {
+            LootTable.Builder tableBuilder = LootTable.builder();
+            tableBuilder.pool(poolBuilder);
+            Registry.register(LOOT_TABLE_REGISTRY, id, tableBuilder.build());
+        });
     }
 }

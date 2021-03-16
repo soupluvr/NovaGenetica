@@ -7,6 +7,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
@@ -25,8 +26,8 @@ import java.util.function.Supplier;
 public class NovaGeneticaMachineBlock extends HorizontalFacingBlock implements BlockEntityProvider, InventoryProvider {
     private Supplier<BlockEntity> blockEntitySupplier;
 
-    public NovaGeneticaMachineBlock(Settings settings) {
-        super(settings);
+    public NovaGeneticaMachineBlock() {
+        super(AbstractBlock.Settings.of(Material.METAL).sounds(BlockSoundGroup.NETHERITE).strength(1200f, 50f).requiresTool());
     }
 
     @Override
