@@ -1,13 +1,10 @@
 package me.orangemonkey68.novagenetica.item;
 
 import me.orangemonkey68.novagenetica.NovaGenetica;
-import me.orangemonkey68.novagenetica.abilities.Ability;
-import me.orangemonkey68.novagenetica.item.helper.NBTHelper;
-import net.minecraft.entity.EntityType;
+import me.orangemonkey68.novagenetica.helper.item.NBTHelper;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;

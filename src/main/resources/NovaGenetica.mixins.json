@@ -4,8 +4,10 @@
   "package": "me.orangemonkey68.novagenetica.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "ClientWorldMixin",
     "CreeperEntityMixin",
     "EntityTypeMixin",
+    "LivingEntityRendererMixin",
     "ServerPlayerEntityMixin"
   ],
   "client": [

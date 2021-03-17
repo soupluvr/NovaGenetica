@@ -1,4 +1,4 @@
-package me.orangemonkey68.novagenetica;
+package me.orangemonkey68.novagenetica.accessor;
 
 import me.orangemonkey68.novagenetica.abilities.Ability;
 import net.minecraft.util.Identifier;

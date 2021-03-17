@@ -20,7 +20,6 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class GeneAnalyzerBlockEntity extends BaseMachineBlockEntity {
@@ -61,6 +60,7 @@ public class GeneAnalyzerBlockEntity extends BaseMachineBlockEntity {
         if(world != null && !world.isClient){
             ItemStack inputStack = itemStacks.get(0);
             CompoundTag tag = inputStack.getTag();
+            NovaGenetica.LOGGER.info("AAAAAAAAA");
             if(tag != null){
                 if(tag.contains("entityType")){
                     Identifier entityTypeId = new Identifier(tag.getString("entityType"));
@@ -72,9 +72,9 @@ public class GeneAnalyzerBlockEntity extends BaseMachineBlockEntity {
                         //generate the loot. IDK why it's saying it can be null
                         if(lootTable != null){
                             List<ItemStack> loot = lootTable.generateLoot(context);
-
+                            NovaGenetica.LOGGER.info(lootTable.toString());
                             //print out all loot generated. This should be 1 in length
-                            NovaGenetica.LOGGER.info(Arrays.toString(loot.toArray()));
+//                            System.out.println(loot.toString());
 
                             itemStacks.set(0, ItemStack.EMPTY);
                             itemStacks.set(1, loot.get(0));
@@ -82,7 +82,6 @@ public class GeneAnalyzerBlockEntity extends BaseMachineBlockEntity {
                     }
                 }
             }
-
         }
     }
 

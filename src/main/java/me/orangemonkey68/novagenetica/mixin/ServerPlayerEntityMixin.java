@@ -2,8 +2,8 @@ package me.orangemonkey68.novagenetica.mixin;
 
 import com.mojang.authlib.GameProfile;
 import me.orangemonkey68.novagenetica.NovaGenetica;
-import me.orangemonkey68.novagenetica.NovaGeneticaPlayer;
 import me.orangemonkey68.novagenetica.abilities.Ability;
+import me.orangemonkey68.novagenetica.accessor.NovaGeneticaPlayer;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.MinecraftServer;

@@ -1,25 +1,22 @@
 package me.orangemonkey68.novagenetica;
 
 import com.mojang.serialization.Lifecycle;
-import me.orangemonkey68.novagenetica.abilities.Ability;
-import me.orangemonkey68.novagenetica.abilities.AbilityEatGrass;
-import me.orangemonkey68.novagenetica.abilities.AbilityResistance;
-import me.orangemonkey68.novagenetica.abilities.AbilityScareCreepers;
+import me.orangemonkey68.novagenetica.abilities.*;
 import me.orangemonkey68.novagenetica.block.NovaGeneticaMachineBlock;
 import me.orangemonkey68.novagenetica.blockentity.BaseMachineBlockEntity;
 import me.orangemonkey68.novagenetica.blockentity.GeneAnalyzerBlockEntity;
 import me.orangemonkey68.novagenetica.blockentity.GeneExtractorBlockEntity;
 import me.orangemonkey68.novagenetica.gui.Generic1x1GuiDescription;
+import me.orangemonkey68.novagenetica.helper.item.ItemHelper;
+import me.orangemonkey68.novagenetica.helper.registration.RegistrationHelper;
 import me.orangemonkey68.novagenetica.item.*;
-import me.orangemonkey68.novagenetica.item.helper.ItemHelper;
-import me.orangemonkey68.novagenetica.item.helper.RegistrationHelper;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.*;
@@ -80,6 +77,8 @@ public class NovaGenetica implements ModInitializer {
 
         registerBlocks();
 
+        FabricLoader.getInstance().getModContainer("minecraft").ifPresent(modContainer -> LOGGER.info("MINECRAFT PRESENT"));
+
         REGISTRATION_HELPER.addItemToGroup(RegistrationHelper.Subsection.START, new ItemStack(MOB_SCRAPER_ITEM));
         REGISTRATION_HELPER.addItemToGroup(RegistrationHelper.Subsection.START, new ItemStack(EMPTY_SYRINGE_ITEM));
 
@@ -89,10 +88,7 @@ public class NovaGenetica implements ModInitializer {
 
         registerColorProviders();
 
-        //register a listener for when the world is loaded.
-        //At this point we know that all mods have been loaded and registered abilities
-        //Here we can finalize all of the loot tables.
-        ServerWorldEvents.LOAD.register((server, world) -> LootTableManager.build());
+        LootTableManager.init();
 
         //Loops over all abilities, and runs their onRegistry() logic
         ABILITY_REGISTRY.forEach(Ability::onRegistryServer);
@@ -171,6 +167,7 @@ public class NovaGenetica implements ModInitializer {
         REGISTRATION_HELPER.register(new AbilityEatGrass(), new Identifier(MOD_ID, "eat_grass"));
         REGISTRATION_HELPER.register(new AbilityResistance(), new Identifier(MOD_ID, "resistance"));
         REGISTRATION_HELPER.register(new AbilityScareCreepers(), new Identifier(MOD_ID, "scare_creepers"));
+        REGISTRATION_HELPER.register(new AbilityNone(), new Identifier(MOD_ID, "none"));
 
         REGISTRATION_HELPER.registerEntityColor(0xFFFFFF, EntityType.SHEEP);
         REGISTRATION_HELPER.registerEntityColor(0xe09304, EntityType.OCELOT);

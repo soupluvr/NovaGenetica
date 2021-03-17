@@ -2,7 +2,7 @@ package me.orangemonkey68.novagenetica.blockentity;
 
 import io.github.cottonmc.cotton.gui.PropertyDelegateHolder;
 import me.orangemonkey68.novagenetica.NovaGenetica;
-import me.orangemonkey68.novagenetica.item.helper.NBTHelper;
+import me.orangemonkey68.novagenetica.helper.item.NBTHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.InventoryProvider;
 import net.minecraft.block.entity.BlockEntity;

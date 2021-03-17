@@ -1,10 +1,11 @@
-package me.orangemonkey68.novagenetica.item.helper;
+package me.orangemonkey68.novagenetica.helper.registration;
 
 import me.orangemonkey68.novagenetica.LootTableManager;
 import me.orangemonkey68.novagenetica.NovaGenetica;
-import me.orangemonkey68.novagenetica.NovaGeneticaEntityType;
 import me.orangemonkey68.novagenetica.abilities.Ability;
 import me.orangemonkey68.novagenetica.abilities.AbilityValidator;
+import me.orangemonkey68.novagenetica.accessor.NovaGeneticaEntityType;
+import me.orangemonkey68.novagenetica.helper.item.ItemHelper;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemGroup;

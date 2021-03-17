@@ -2,7 +2,8 @@ package me.orangemonkey68.novagenetica;
 
 import com.mojang.serialization.Lifecycle;
 import me.orangemonkey68.novagenetica.abilities.Ability;
-import me.orangemonkey68.novagenetica.item.helper.ItemHelper;
+import me.orangemonkey68.novagenetica.helper.item.ItemHelper;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.minecraft.loot.ConstantLootTableRange;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTable;
@@ -23,13 +24,18 @@ public class LootTableManager {
 
     private static final Map<Identifier, LootPool.Builder> PRE_ENTITY_LOOT_POOL_MAP = new HashMap<>();
 
+    public static void init(){
+        ServerWorldEvents.LOAD.register((server, world) -> LootTableManager.build());
+        ServerWorldEvents.UNLOAD.register((server, world) -> LootTableManager.LOOT_TABLE_REGISTRY = null);
+    }
+
     /**
      * Registers a loot entry for any given entity type and ability.
      * @param entityTypeId the ID of the entity type
      * @param ability the ability to register
      */
     public static void registerLootEntry(Identifier entityTypeId, Ability ability){
-        NovaGenetica.LOGGER.info("Adding ability entry \"{}\" to entity type \"{}\"", NovaGenetica.ABILITY_REGISTRY.getId(ability), entityTypeId.toString());
+        NovaGenetica.LOGGER.info("Adding ability entry \"{}\" to loot table \"{}\"", NovaGenetica.ABILITY_REGISTRY.getId(ability), entityTypeId.toString());
 
         //add new builder if key doesn't exist
         PRE_ENTITY_LOOT_POOL_MAP.putIfAbsent(entityTypeId, LootPool.builder());
@@ -59,8 +65,6 @@ public class LootTableManager {
     public static void build(){
         //we only wanna run this once
         if(LOOT_TABLE_REGISTRY != null) return;
-
-        NovaGenetica.LOGGER.info(PRE_ENTITY_LOOT_POOL_MAP.toString());
 
         LOOT_TABLE_REGISTRY = new SimpleRegistry<>(LOOT_TABLE_REGISTRY_KEY, Lifecycle.stable());
 

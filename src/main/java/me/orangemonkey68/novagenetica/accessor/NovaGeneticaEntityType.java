@@ -1,7 +1,7 @@
-package me.orangemonkey68.novagenetica;
+package me.orangemonkey68.novagenetica.accessor;
 
 import me.orangemonkey68.novagenetica.abilities.Ability;
-import me.orangemonkey68.novagenetica.item.helper.RegistrationHelper;
+import me.orangemonkey68.novagenetica.helper.registration.RegistrationHelper;
 import net.minecraft.util.Identifier;
 
 import java.util.Set;

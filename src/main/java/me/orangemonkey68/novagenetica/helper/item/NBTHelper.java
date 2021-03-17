@@ -1,8 +1,8 @@
-package me.orangemonkey68.novagenetica.item.helper;
+package me.orangemonkey68.novagenetica.helper.item;
 
 import me.orangemonkey68.novagenetica.NovaGenetica;
-import me.orangemonkey68.novagenetica.NovaGeneticaPlayer;
 import me.orangemonkey68.novagenetica.abilities.Ability;
+import me.orangemonkey68.novagenetica.accessor.NovaGeneticaPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;

@@ -2,8 +2,8 @@ package me.orangemonkey68.novagenetica.blockentity;
 
 import me.orangemonkey68.novagenetica.NovaGenetica;
 import me.orangemonkey68.novagenetica.gui.Generic1x1GuiDescription;
+import me.orangemonkey68.novagenetica.helper.item.ItemHelper;
 import me.orangemonkey68.novagenetica.item.MobFlakesItem;
-import me.orangemonkey68.novagenetica.item.helper.ItemHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;

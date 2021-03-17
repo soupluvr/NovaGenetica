@@ -1,7 +1,7 @@
 package me.orangemonkey68.novagenetica.item;
 
-import me.orangemonkey68.novagenetica.NovaGeneticaPlayer;
-import me.orangemonkey68.novagenetica.item.helper.ItemHelper;
+import me.orangemonkey68.novagenetica.accessor.NovaGeneticaPlayer;
+import me.orangemonkey68.novagenetica.helper.item.ItemHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -9,7 +9,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.world.World;
-import org.apache.logging.log4j.core.jmx.Server;
 
 public class EmptySyringeItem extends Item {
     public EmptySyringeItem(Settings settings) {

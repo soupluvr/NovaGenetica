@@ -6,6 +6,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.TranslatableText;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -56,12 +57,12 @@ public class AbilityNone implements Ability {
 
     @Override
     public int getLootTableWeight() {
-        return 0;
+        return 50;
     }
 
     @Override
     public Set<EntityType> getEntityTypes() {
-        return new HashSet<>();
+        return new HashSet<>(Collections.singletonList(EntityType.SHEEP));
     }
 
     /**

@@ -1,7 +1,7 @@
 package me.orangemonkey68.novagenetica.abilities;
 
 import me.orangemonkey68.novagenetica.NovaGenetica;
-import me.orangemonkey68.novagenetica.NovaGeneticaPlayer;
+import me.orangemonkey68.novagenetica.accessor.NovaGeneticaPlayer;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
