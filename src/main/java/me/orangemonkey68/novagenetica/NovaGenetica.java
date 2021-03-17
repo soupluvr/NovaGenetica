@@ -8,6 +8,7 @@ import me.orangemonkey68.novagenetica.blockentity.GeneAnalyzerBlockEntity;
 import me.orangemonkey68.novagenetica.blockentity.GeneExtractorBlockEntity;
 import me.orangemonkey68.novagenetica.gui.Generic1x1GuiDescription;
 import me.orangemonkey68.novagenetica.helper.item.ItemHelper;
+import me.orangemonkey68.novagenetica.helper.registration.LootTableHelper;
 import me.orangemonkey68.novagenetica.helper.registration.RegistrationHelper;
 import me.orangemonkey68.novagenetica.item.*;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -88,7 +89,7 @@ public class NovaGenetica implements ModInitializer {
 
         registerColorProviders();
 
-        LootTableManager.init();
+        LootTableHelper.init();
 
         //Loops over all abilities, and runs their onRegistry() logic
         ABILITY_REGISTRY.forEach(Ability::onRegistryServer);

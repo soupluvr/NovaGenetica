@@ -1,6 +1,7 @@
-package me.orangemonkey68.novagenetica;
+package me.orangemonkey68.novagenetica.helper.registration;
 
 import com.mojang.serialization.Lifecycle;
+import me.orangemonkey68.novagenetica.NovaGenetica;
 import me.orangemonkey68.novagenetica.abilities.Ability;
 import me.orangemonkey68.novagenetica.helper.item.ItemHelper;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
@@ -18,15 +19,15 @@ import net.minecraft.util.registry.SimpleRegistry;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LootTableManager {
+public class LootTableHelper {
     public static final RegistryKey<Registry<LootTable>> LOOT_TABLE_REGISTRY_KEY = RegistryKey.ofRegistry(new Identifier(NovaGenetica.MOD_ID, "loot_table"));
     public static Registry<LootTable> LOOT_TABLE_REGISTRY = null;
 
     private static final Map<Identifier, LootPool.Builder> PRE_ENTITY_LOOT_POOL_MAP = new HashMap<>();
 
     public static void init(){
-        ServerWorldEvents.LOAD.register((server, world) -> LootTableManager.build());
-        ServerWorldEvents.UNLOAD.register((server, world) -> LootTableManager.LOOT_TABLE_REGISTRY = null);
+        ServerWorldEvents.LOAD.register((server, world) -> LootTableHelper.build());
+        ServerWorldEvents.UNLOAD.register((server, world) -> LootTableHelper.LOOT_TABLE_REGISTRY = null);
     }
 
     /**

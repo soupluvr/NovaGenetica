@@ -1,6 +1,6 @@
 package me.orangemonkey68.novagenetica.blockentity;
 
-import me.orangemonkey68.novagenetica.LootTableManager;
+import me.orangemonkey68.novagenetica.helper.registration.LootTableHelper;
 import me.orangemonkey68.novagenetica.NovaGenetica;
 import me.orangemonkey68.novagenetica.gui.Generic1x1GuiDescription;
 import me.orangemonkey68.novagenetica.item.GeneItem;
@@ -64,9 +64,9 @@ public class GeneAnalyzerBlockEntity extends BaseMachineBlockEntity {
             if(tag != null){
                 if(tag.contains("entityType")){
                     Identifier entityTypeId = new Identifier(tag.getString("entityType"));
-                    if(Registry.ENTITY_TYPE.containsId(entityTypeId) && LootTableManager.LOOT_TABLE_REGISTRY.containsId(entityTypeId)){
+                    if(Registry.ENTITY_TYPE.containsId(entityTypeId) && LootTableHelper.LOOT_TABLE_REGISTRY.containsId(entityTypeId)){
                         //get the loot table for this entity
-                        LootTable lootTable = LootTableManager.LOOT_TABLE_REGISTRY.get(entityTypeId);
+                        LootTable lootTable = LootTableHelper.LOOT_TABLE_REGISTRY.get(entityTypeId);
                         //Generate the context
                         LootContext context = new LootContext.Builder((ServerWorld) world).random(world.random).build(LootContextTypes.EMPTY);
                         //generate the loot. IDK why it's saying it can be null
@@ -95,7 +95,7 @@ public class GeneAnalyzerBlockEntity extends BaseMachineBlockEntity {
                 //Return true if tag contains the ID of an existing EntityType
                 return tag.contains("entityType") &&
                         Registry.ENTITY_TYPE.containsId(entityId) &&
-                        LootTableManager.LOOT_TABLE_REGISTRY.containsId(entityId);
+                        LootTableHelper.LOOT_TABLE_REGISTRY.containsId(entityId);
             }
         } else if (slot == 1){
             return (itemStacks.get(1) == ItemStack.EMPTY || itemStacks.get(1).getItem() == Items.AIR);
