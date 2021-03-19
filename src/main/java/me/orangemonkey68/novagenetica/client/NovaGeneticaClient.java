@@ -4,7 +4,7 @@ import me.orangemonkey68.novagenetica.NovaGenetica;
 import me.orangemonkey68.novagenetica.abilities.Ability;
 import me.orangemonkey68.novagenetica.gui.Generic1x1GuiDescription;
 import me.orangemonkey68.novagenetica.gui.Generic1x1Screen;
-import me.orangemonkey68.novagenetica.helper.registration.ColorHelper;
+import me.orangemonkey68.novagenetica.helper.ColorHelper;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -14,15 +14,10 @@ import org.apache.logging.log4j.Logger;
 
 @Environment(EnvType.CLIENT)
 public class NovaGeneticaClient implements ClientModInitializer {
-    public static final Logger LOGGER = LogManager.getLogger("novagenetica_client");
 
     @Override
     public void onInitializeClient() {
         NovaGenetica.ABILITY_REGISTRY.forEach(Ability::onRegistryClient);
-        ScreenRegistry.<Generic1x1GuiDescription, Generic1x1Screen>register(NovaGenetica.GENERIC_1X1_SCREEN_HANDLER_TYPE, Generic1x1Screen::new);
-
-        ColorHelper.init();
+        ScreenRegistry.register(NovaGenetica.GENERIC_1X1_SCREEN_HANDLER_TYPE, Generic1x1Screen::new);
     }
-
-
 }

@@ -3,7 +3,6 @@ package me.orangemonkey68.novagenetica.abilities;
 import me.orangemonkey68.novagenetica.NovaGenetica;
 import net.minecraft.entity.EntityType;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 
 import java.util.Arrays;
@@ -43,7 +42,7 @@ public class AbilityScareCreepers implements Ability {
     }
 
     @Override
-    public Set<EntityType> getEntityTypes() {
+    public Set<EntityType<?>> getEntityTypes() {
         return new HashSet<>(Arrays.asList(EntityType.CAT, EntityType.OCELOT));
     }
 

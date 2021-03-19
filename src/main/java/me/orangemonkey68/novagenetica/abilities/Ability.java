@@ -1,16 +1,12 @@
 package me.orangemonkey68.novagenetica.abilities;
 
-import com.google.common.collect.ImmutableSet;
 import me.orangemonkey68.novagenetica.NovaGenetica;
 import me.orangemonkey68.novagenetica.client.NovaGeneticaClient;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -56,7 +52,7 @@ public interface Ability {
 
     int getLootTableWeight();
 
-    Set<EntityType> getEntityTypes();
+    Set<EntityType<?>> getEntityTypes();
 
     /**
      * This code is run when the player injects the ability into themself.

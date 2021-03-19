@@ -43,7 +43,7 @@ public class AbilityResistance implements Ability{
     }
 
     @Override
-    public Set<EntityType> getEntityTypes() {
+    public Set<EntityType<?>> getEntityTypes() {
         return new HashSet<>(Arrays.asList(EntityType.ZOMBIE, EntityType.ZOMBIE_VILLAGER, EntityType.ZOMBIFIED_PIGLIN));
     }
 

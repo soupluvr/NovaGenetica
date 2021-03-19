@@ -1,6 +1,8 @@
 package me.orangemonkey68.novagenetica.item;
 
+import me.orangemonkey68.novagenetica.NovaGenetica;
 import me.orangemonkey68.novagenetica.accessor.NovaGeneticaEntityType;
+import me.orangemonkey68.novagenetica.helper.ColorHelper;
 import me.orangemonkey68.novagenetica.helper.item.ItemHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -22,14 +24,20 @@ public class MobScraperItem extends ToolItem {
 
     @Override
     public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
+
         if(!user.world.isClient){
             EntityType<?> entityType = entity.getType();
             NovaGeneticaEntityType ngEntityType = (NovaGeneticaEntityType) entityType;
+
+            NovaGenetica.LOGGER.info("Not on client");
+            NovaGenetica.LOGGER.info(ngEntityType.getAbilities().toString());
+
             if(!ngEntityType.getAbilities().isEmpty()){
-                ItemStack stackToDrop = ItemHelper.getMobFlakes(Registry.ENTITY_TYPE.getId(entityType));
-                Vec3d entityPos = entity.getPos();
+                ItemStack stackToDrop = ItemHelper.getMobFlakes(Registry.ENTITY_TYPE.getId(entityType), ColorHelper.getEntityColor(entity));
+
                 entity.dropStack(stackToDrop);
                 entity.damage(DamageSource.player(user), 1);
+
                 user.getStackInHand(hand).damage(1, user, playerEntity -> playerEntity.sendToolBreakStatus(hand));
 
                 return ActionResult.SUCCESS;

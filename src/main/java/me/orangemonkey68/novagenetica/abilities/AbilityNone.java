@@ -61,7 +61,7 @@ public class AbilityNone implements Ability {
     }
 
     @Override
-    public Set<EntityType> getEntityTypes() {
+    public Set<EntityType<?>> getEntityTypes() {
         return new HashSet<>(Collections.singletonList(EntityType.SHEEP));
     }
 

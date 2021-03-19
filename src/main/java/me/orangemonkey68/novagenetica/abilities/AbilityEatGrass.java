@@ -53,7 +53,7 @@ public class AbilityEatGrass implements Ability, UseBlockCallback {
     }
 
     @Override
-    public Set<EntityType> getEntityTypes() {
+    public Set<EntityType<?>> getEntityTypes() {
         return new HashSet<>(Arrays.asList(EntityType.SHEEP));
     }
 

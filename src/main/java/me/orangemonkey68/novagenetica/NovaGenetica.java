@@ -7,6 +7,7 @@ import me.orangemonkey68.novagenetica.blockentity.BaseMachineBlockEntity;
 import me.orangemonkey68.novagenetica.blockentity.GeneAnalyzerBlockEntity;
 import me.orangemonkey68.novagenetica.blockentity.GeneExtractorBlockEntity;
 import me.orangemonkey68.novagenetica.gui.Generic1x1GuiDescription;
+import me.orangemonkey68.novagenetica.helper.ColorHelper;
 import me.orangemonkey68.novagenetica.helper.item.ItemHelper;
 import me.orangemonkey68.novagenetica.helper.registration.LootTableHelper;
 import me.orangemonkey68.novagenetica.helper.registration.RegistrationHelper;
@@ -17,9 +18,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.EntityType;
 import net.minecraft.item.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.recipe.Ingredient;
@@ -76,9 +75,9 @@ public class NovaGenetica implements ModInitializer {
     public void onInitialize() {
         AutoConfig.register(NovaGeneticaConfig.class, Toml4jConfigSerializer::new);
 
-        registerBlocks();
+        ColorHelper.init();
 
-        FabricLoader.getInstance().getModContainer("minecraft").ifPresent(modContainer -> LOGGER.info("MINECRAFT PRESENT"));
+        registerBlocks();
 
         REGISTRATION_HELPER.addItemToGroup(RegistrationHelper.Subsection.START, new ItemStack(MOB_SCRAPER_ITEM));
         REGISTRATION_HELPER.addItemToGroup(RegistrationHelper.Subsection.START, new ItemStack(EMPTY_SYRINGE_ITEM));
@@ -94,19 +93,18 @@ public class NovaGenetica implements ModInitializer {
         //Loops over all abilities, and runs their onRegistry() logic
         ABILITY_REGISTRY.forEach(Ability::onRegistryServer);
 
-        ITEM_GROUP = REGISTRATION_HELPER.buildGroup(ItemHelper.getGene(null, new Identifier(MOD_ID, "none"), true, false));
+        ITEM_GROUP = REGISTRATION_HELPER.buildGroup(ItemHelper.getGene(null, new Identifier(MOD_ID, "none"), true, false, 0xFFFFFF));
     }
 
-    @SuppressWarnings("ConstantConditions")
     void registerColorProviders(){
         // Gene
         ColorProviderRegistry.ITEM.register((stack, tintIndex) -> {
             CompoundTag tag = stack.getTag();
             if(tag != null){
-                if(tag.contains("entityType")){
-                    Identifier id = new Identifier(tag.getString("entityType"));
-                    return tintIndex == 1 ? RegistrationHelper.getEntityColor(id) : -1;
-                } else if (tag.contains("ability")){
+                if(tag.contains("color")){
+                    int color = tag.getInt("color") == ColorHelper.BAD_RETURN ? 0xFFFFFF : tag.getInt("color");
+                    return tintIndex == 1 ? color : -1;
+                }else if (tag.contains("ability")){
                     Identifier id = new Identifier(tag.getString("ability"));
                     if(NovaGenetica.ABILITY_REGISTRY.containsId(id)){
                         return tintIndex == 1 ? NovaGenetica.ABILITY_REGISTRY.get(id).getColor() : -1;
@@ -136,8 +134,8 @@ public class NovaGenetica implements ModInitializer {
         ColorProviderRegistry.ITEM.register((stack, tintIndex) -> {
             CompoundTag tag = stack.getTag();
             if(tag != null) {
-                if(tag.contains("entityType")){
-                    return RegistrationHelper.getEntityColor(new Identifier(tag.getString("entityType")));
+                if(tag.contains("color") && tag.getInt("color") != ColorHelper.BAD_RETURN){
+                    return tag.getInt("color");
                 }
             }
             return 0xFFFFFF;
@@ -169,13 +167,6 @@ public class NovaGenetica implements ModInitializer {
         REGISTRATION_HELPER.register(new AbilityResistance(), new Identifier(MOD_ID, "resistance"));
         REGISTRATION_HELPER.register(new AbilityScareCreepers(), new Identifier(MOD_ID, "scare_creepers"));
         REGISTRATION_HELPER.register(new AbilityNone(), new Identifier(MOD_ID, "none"));
-
-        REGISTRATION_HELPER.registerEntityColor(0xFFFFFF, EntityType.SHEEP);
-        REGISTRATION_HELPER.registerEntityColor(0xe09304, EntityType.OCELOT);
-        REGISTRATION_HELPER.registerEntityColor(0xe09304, EntityType.CAT);
-        REGISTRATION_HELPER.registerEntityColor(0xe09304, EntityType.CAT);
-        REGISTRATION_HELPER.registerEntityColor(0x15471a, EntityType.ZOMBIE);
-        REGISTRATION_HELPER.registerEntityColor(0x15471a, EntityType.ZOMBIE_VILLAGER);
     }
 
     public static NovaGeneticaConfig getConfig() {

@@ -3,6 +3,7 @@ package me.orangemonkey68.novagenetica.helper.registration;
 import com.mojang.serialization.Lifecycle;
 import me.orangemonkey68.novagenetica.NovaGenetica;
 import me.orangemonkey68.novagenetica.abilities.Ability;
+import me.orangemonkey68.novagenetica.helper.ColorHelper;
 import me.orangemonkey68.novagenetica.helper.item.ItemHelper;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.minecraft.loot.ConstantLootTableRange;
@@ -44,7 +45,7 @@ public class LootTableHelper {
         LootPool.Builder poolBuilder = PRE_ENTITY_LOOT_POOL_MAP.get(entityTypeId);
 
         //get the NBT of the correct ItemStack
-        CompoundTag nbt = ItemHelper.getGene(null, NovaGenetica.ABILITY_REGISTRY.getId(ability), false, false).getTag();
+        CompoundTag nbt = ItemHelper.getGene(null, NovaGenetica.ABILITY_REGISTRY.getId(ability), false, false, ColorHelper.BAD_RETURN).getTag();
         //Makes an ItemEntryBuilder of a GeneItem
         ItemEntry.Builder entryBuilder = ItemEntry.builder(NovaGenetica.GENE_ITEM);
         //adds a "set nbt data" function to the table
