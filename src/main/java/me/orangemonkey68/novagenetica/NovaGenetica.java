@@ -124,13 +124,13 @@ public class NovaGenetica implements ModInitializer {
                 if (tag.contains("ability")){
                     Identifier id = new Identifier(tag.getString("ability"));
                     if(NovaGenetica.ABILITY_REGISTRY.containsId(id)){
-                        return NovaGenetica.ABILITY_REGISTRY.get(id).getColor();
+                        return tintIndex == 0 ? NovaGenetica.ABILITY_REGISTRY.get(id).getColor() : -1;
                     }
                 } else if (tag.contains("uuid")){
-                    return 0xe83c1a;
+                    return tintIndex == 0 ? 0xe83c1a : -1;
                 }
             }
-            return 0xFFFFFF;
+            return tintIndex == 0 ? 0xFFFFFF : -1;
         }, FILLED_SYRINGE_ITEM);
 
         ColorProviderRegistry.ITEM.register((stack, tintIndex) -> {

@@ -1,6 +1,7 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "novagenetica:item/filled_syringe"
+    "layer0": "novagenetica:item/filled_syringe_1",
+    "layer1": "novagenetica:item/empty_syringe"
   }
 }

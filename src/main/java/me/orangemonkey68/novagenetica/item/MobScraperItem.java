@@ -33,7 +33,7 @@ public class MobScraperItem extends ToolItem {
 
             user.getStackInHand(hand).damage(1, user, playerEntity -> playerEntity.sendToolBreakStatus(hand));
 
-            return ActionResult.SUCCESS;
+            return ActionResult.CONSUME;
         }
 
         return ActionResult.PASS;
