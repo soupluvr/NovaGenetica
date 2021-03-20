@@ -2,8 +2,6 @@ package me.orangemonkey68.novagenetica.helper.item;
 
 import me.orangemonkey68.novagenetica.NovaGenetica;
 import me.orangemonkey68.novagenetica.accessor.NovaGeneticaPlayer;
-import me.orangemonkey68.novagenetica.helper.ColorHelper;
-import me.orangemonkey68.novagenetica.helper.registration.RegistrationHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -25,6 +23,7 @@ public class ItemHelper {
         return stack;
     }
 
+    @SuppressWarnings("ConstantConditions")
     public static ItemStack getGene(Identifier entityTypeId, Identifier abilityId, boolean complete, boolean identified, int color){
         ItemStack stack = new ItemStack(NovaGenetica.GENE_ITEM);
         CompoundTag tag = new CompoundTag();

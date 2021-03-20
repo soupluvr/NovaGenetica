@@ -7,11 +7,12 @@ import me.orangemonkey68.novagenetica.blockentity.BaseMachineBlockEntity;
 import me.orangemonkey68.novagenetica.blockentity.GeneAnalyzerBlockEntity;
 import me.orangemonkey68.novagenetica.blockentity.GeneExtractorBlockEntity;
 import me.orangemonkey68.novagenetica.gui.Generic1x1GuiDescription;
-import me.orangemonkey68.novagenetica.helper.ColorHelper;
+import me.orangemonkey68.novagenetica.helper.TextureHelper;
 import me.orangemonkey68.novagenetica.helper.item.ItemHelper;
 import me.orangemonkey68.novagenetica.helper.registration.LootTableHelper;
 import me.orangemonkey68.novagenetica.helper.registration.RegistrationHelper;
 import me.orangemonkey68.novagenetica.item.*;
+import me.orangemonkey68.novagenetica.networking.NetworkHandler;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ModInitializer;
@@ -75,7 +76,7 @@ public class NovaGenetica implements ModInitializer {
     public void onInitialize() {
         AutoConfig.register(NovaGeneticaConfig.class, Toml4jConfigSerializer::new);
 
-        ColorHelper.init();
+        NetworkHandler.initServer();
 
         registerBlocks();
 
@@ -96,13 +97,14 @@ public class NovaGenetica implements ModInitializer {
         ITEM_GROUP = REGISTRATION_HELPER.buildGroup(ItemHelper.getGene(null, new Identifier(MOD_ID, "none"), true, false, 0xFFFFFF));
     }
 
+    @SuppressWarnings("ConstantConditions")
     void registerColorProviders(){
         // Gene
         ColorProviderRegistry.ITEM.register((stack, tintIndex) -> {
             CompoundTag tag = stack.getTag();
             if(tag != null){
                 if(tag.contains("color")){
-                    int color = tag.getInt("color") == ColorHelper.BAD_RETURN ? 0xFFFFFF : tag.getInt("color");
+                    int color = tag.getInt("color") == TextureHelper.BAD_RETURN ? 0xFFFFFF : tag.getInt("color");
                     return tintIndex == 1 ? color : -1;
                 }else if (tag.contains("ability")){
                     Identifier id = new Identifier(tag.getString("ability"));
@@ -134,7 +136,7 @@ public class NovaGenetica implements ModInitializer {
         ColorProviderRegistry.ITEM.register((stack, tintIndex) -> {
             CompoundTag tag = stack.getTag();
             if(tag != null) {
-                if(tag.contains("color") && tag.getInt("color") != ColorHelper.BAD_RETURN){
+                if(tag.contains("color") && tag.getInt("color") != TextureHelper.BAD_RETURN){
                     return tag.getInt("color");
                 }
             }

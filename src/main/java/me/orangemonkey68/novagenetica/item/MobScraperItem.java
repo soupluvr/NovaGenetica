@@ -2,19 +2,16 @@ package me.orangemonkey68.novagenetica.item;
 
 import me.orangemonkey68.novagenetica.NovaGenetica;
 import me.orangemonkey68.novagenetica.accessor.NovaGeneticaEntityType;
-import me.orangemonkey68.novagenetica.helper.ColorHelper;
-import me.orangemonkey68.novagenetica.helper.item.ItemHelper;
+import me.orangemonkey68.novagenetica.networking.NetworkHandler;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ToolItem;
 import net.minecraft.item.ToolMaterial;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.registry.Registry;
 
 public class MobScraperItem extends ToolItem {
 
@@ -24,26 +21,21 @@ public class MobScraperItem extends ToolItem {
 
     @Override
     public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
-
-        if(!user.world.isClient){
+        if(!user.world.isClient()){
             EntityType<?> entityType = entity.getType();
             NovaGeneticaEntityType ngEntityType = (NovaGeneticaEntityType) entityType;
 
             NovaGenetica.LOGGER.info("Not on client");
             NovaGenetica.LOGGER.info(ngEntityType.getAbilities().toString());
 
-            if(!ngEntityType.getAbilities().isEmpty()){
-                ItemStack stackToDrop = ItemHelper.getMobFlakes(Registry.ENTITY_TYPE.getId(entityType), ColorHelper.getEntityColor(entity));
+            //Ask client for stack
+            NetworkHandler.dropMobFlakes(entity.getEntityId(), (ServerPlayerEntity) user);
 
-                entity.dropStack(stackToDrop);
-                entity.damage(DamageSource.player(user), 1);
+            user.getStackInHand(hand).damage(1, user, playerEntity -> playerEntity.sendToolBreakStatus(hand));
 
-                user.getStackInHand(hand).damage(1, user, playerEntity -> playerEntity.sendToolBreakStatus(hand));
-
-                return ActionResult.SUCCESS;
-            }
+            return ActionResult.SUCCESS;
         }
 
-        return ActionResult.FAIL;
+        return ActionResult.PASS;
     }
 }

@@ -4,10 +4,9 @@ import me.orangemonkey68.novagenetica.NovaGenetica;
 import me.orangemonkey68.novagenetica.abilities.Ability;
 import me.orangemonkey68.novagenetica.abilities.AbilityValidator;
 import me.orangemonkey68.novagenetica.accessor.NovaGeneticaEntityType;
-import me.orangemonkey68.novagenetica.helper.ColorHelper;
+import me.orangemonkey68.novagenetica.helper.TextureHelper;
 import me.orangemonkey68.novagenetica.helper.item.ItemHelper;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
-import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -58,13 +57,13 @@ public class RegistrationHelper {
 
             LootTableHelper.registerLootEntry(Registry.ENTITY_TYPE.getId(type), ability);
 
-            ItemStack incompleteGene = ItemHelper.getGene(typeId, null, false, false, ColorHelper.BAD_RETURN);
+            ItemStack incompleteGene = ItemHelper.getGene(typeId, null, false, false, TextureHelper.BAD_RETURN);
 
             if(!itemMap.get(Subsection.INCOMPLETE_GENE).contains(incompleteGene)){
                 itemMap.get(Subsection.INCOMPLETE_GENE).add(incompleteGene);
             }
 
-            ItemStack mobFlake = ItemHelper.getMobFlakes(typeId, ColorHelper.BAD_RETURN);
+            ItemStack mobFlake = ItemHelper.getMobFlakes(typeId, TextureHelper.BAD_RETURN);
             if(!itemMap.get(Subsection.MOB_FLAKES).contains(mobFlake)){
                 itemMap.get(Subsection.MOB_FLAKES).add(mobFlake);
             }
@@ -75,7 +74,7 @@ public class RegistrationHelper {
             NovaGenetica.LOGGER.info(((NovaGeneticaEntityType)type).canGiveAbility(ability));
         });
 
-        addItemToGroup(Subsection.COMPLETE_GENE, ItemHelper.getGene(null, abilityId, true, true, ColorHelper.BAD_RETURN));
+        addItemToGroup(Subsection.COMPLETE_GENE, ItemHelper.getGene(null, abilityId, true, true, TextureHelper.BAD_RETURN));
 
         //Adds to Ability.ABILITY_ENTITY_MAP
         Ability.ABILITY_ENTITY_MAP.put(ability, ability.getEntityTypes());
