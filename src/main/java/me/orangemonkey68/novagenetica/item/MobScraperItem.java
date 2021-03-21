@@ -1,10 +1,8 @@
 package me.orangemonkey68.novagenetica.item;
 
-import me.orangemonkey68.novagenetica.NovaGenetica;
-import me.orangemonkey68.novagenetica.accessor.NovaGeneticaEntityType;
 import me.orangemonkey68.novagenetica.networking.NetworkHandler;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ToolItem;
@@ -19,23 +17,19 @@ public class MobScraperItem extends ToolItem {
         super(material, settings);
     }
 
+
+
     @Override
     public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
         if(!user.world.isClient()){
-            EntityType<?> entityType = entity.getType();
-            NovaGeneticaEntityType ngEntityType = (NovaGeneticaEntityType) entityType;
+            if(!entity.isInvulnerableTo(DamageSource.player(user))){
+                NetworkHandler.dropMobFlakes(entity.getEntityId(), (ServerPlayerEntity) user, hand);
 
-            NovaGenetica.LOGGER.info("Not on client");
-            NovaGenetica.LOGGER.info(ngEntityType.getAbilities().toString());
+                user.getStackInHand(hand).damage(1, user, playerEntity -> playerEntity.sendToolBreakStatus(hand));
 
-            //Ask client for stack
-            NetworkHandler.dropMobFlakes(entity.getEntityId(), (ServerPlayerEntity) user);
-
-            user.getStackInHand(hand).damage(1, user, playerEntity -> playerEntity.sendToolBreakStatus(hand));
-
-            return ActionResult.CONSUME;
+                return ActionResult.success(true);
+            }
         }
-
         return ActionResult.PASS;
     }
 }
