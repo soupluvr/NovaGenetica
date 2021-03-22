@@ -86,6 +86,13 @@ public class GeneAnalyzerBlockEntity extends BaseMachineBlockEntity {
     }
 
     @Override
+    public boolean isInventoryValid() {
+        return
+                isValid(0, itemStacks.get(0)) &&
+                isValid(0, itemStacks.get(0));
+    }
+
+    @Override
     public boolean isValid(int slot, ItemStack stack) {
         if(slot == 0){
             CompoundTag tag = stack.getTag();

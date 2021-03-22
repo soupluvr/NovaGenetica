@@ -35,6 +35,8 @@ public class TextureHelper {
         LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper) -> {
             ENTITY_RENDERER_MAP.put(Registry.ENTITY_TYPE.getId(entityType), entityRenderer);
         });
+
+        NovaGenetica.LOGGER.info("Entity renderer callback registered");
     }
 
     /**

@@ -71,7 +71,6 @@ public class RegistrationHelper {
 //            NovaGenetica.LOGGER.info(typeId.toString());
 
             ((NovaGeneticaEntityType)type).registerAbility(ability);
-            NovaGenetica.LOGGER.info(((NovaGeneticaEntityType)type).canGiveAbility(ability));
         });
 
         addItemToGroup(Subsection.COMPLETE_GENE, ItemHelper.getGene(null, abilityId, true, true, TextureHelper.BAD_RETURN));

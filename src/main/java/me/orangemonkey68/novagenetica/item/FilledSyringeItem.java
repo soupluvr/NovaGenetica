@@ -128,22 +128,6 @@ public class FilledSyringeItem extends Item {
         return new Identifier(abilityString);
     }
 
-//    @Override
-//    public String getTranslationKey(ItemStack stack) {
-//        CompoundTag tag = stack.getTag();
-//        //Return if tag is null
-//        if(tag == null) return UNKNOWN_TRANSLATION_KEY;
-//        String id = tag.getString("ability");
-//        //Return if id is null
-//        if(id == null) return UNKNOWN_TRANSLATION_KEY;
-//        Ability ability = NovaGenetica.ABILITY_REGISTRY.get(new Identifier(id));
-//        //return if ability is null
-//        if(ability == null) return UNKNOWN_TRANSLATION_KEY;
-//        String[] splitId = id.split(":");
-//
-//        return "item.filled_syringe." + id;
-//    }
-
 
     @Override
     public Text getName(ItemStack stack) {
@@ -159,7 +143,7 @@ public class FilledSyringeItem extends Item {
             Identifier id = new Identifier(tag.getString("ability"));
             Ability ability = NovaGenetica.ABILITY_REGISTRY.get(id);
             if(ability != null){
-                return new TranslatableText(getTranslationKey(), ability.getTranslationKey());
+                return new TranslatableText(getTranslationKey(), new TranslatableText(ability.getTranslationKey()));
             }
         }
 

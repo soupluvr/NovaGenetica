@@ -29,6 +29,7 @@ public class LootTableHelper {
     public static void init(){
         ServerWorldEvents.LOAD.register((server, world) -> LootTableHelper.build());
         ServerWorldEvents.UNLOAD.register((server, world) -> LootTableHelper.LOOT_TABLE_REGISTRY = null);
+        NovaGenetica.LOGGER.info("LootTable callbacks initiated");
     }
 
     /**
@@ -75,5 +76,7 @@ public class LootTableHelper {
             tableBuilder.pool(poolBuilder);
             Registry.register(LOOT_TABLE_REGISTRY, id, tableBuilder.build());
         });
+
+        NovaGenetica.LOGGER.info("LootTables built");
     }
 }

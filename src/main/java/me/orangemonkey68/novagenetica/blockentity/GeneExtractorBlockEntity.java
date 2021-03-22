@@ -41,6 +41,13 @@ public class GeneExtractorBlockEntity extends BaseMachineBlockEntity {
         markDirty();
     }
 
+    @Override
+    public boolean isInventoryValid() {
+        return
+                isValid(0, itemStacks.get(0)) &&
+                isValid(1, itemStacks.get(1));
+    }
+
     ItemStack getOutput(ItemStack input){
         CompoundTag tag = input.getTag();
         if(tag != null && tag.contains("entityType")){

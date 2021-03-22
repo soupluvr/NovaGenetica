@@ -116,7 +116,7 @@ public abstract class BaseMachineBlockEntity extends BlockEntity implements
         int maxProgress = getProcessingTime();
 
         //Draw power
-        if(isValid(0, itemStacks.get(0)) && storedPower >= powerStep && progress <= maxProgress && isValid(1, itemStacks.get(1))){
+        if(storedPower >= powerStep && progress <= maxProgress && isInventoryValid()){
             progress++;
             storedPower -= powerStep;
         } else {
@@ -200,4 +200,6 @@ public abstract class BaseMachineBlockEntity extends BlockEntity implements
     public void setStored(double amount) {
         this.storedPower = amount;
     }
+
+    public abstract boolean isInventoryValid();
 }

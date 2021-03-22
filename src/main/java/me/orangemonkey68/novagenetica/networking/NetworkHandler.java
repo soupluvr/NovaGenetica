@@ -63,6 +63,7 @@ public class NetworkHandler {
                 }
             });
         });
+        NovaGenetica.LOGGER.info("Client packets registered");
     }
 
 //    @Environment(EnvType.SERVER)
@@ -93,6 +94,7 @@ public class NetworkHandler {
                 }
             });
         });
+        NovaGenetica.LOGGER.info("Server packets registered");
     }
 
 //    @Environment(EnvType.SERVER)

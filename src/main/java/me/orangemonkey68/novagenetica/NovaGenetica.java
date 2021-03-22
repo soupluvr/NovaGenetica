@@ -5,6 +5,7 @@ import me.orangemonkey68.novagenetica.abilities.*;
 import me.orangemonkey68.novagenetica.block.NovaGeneticaMachineBlock;
 import me.orangemonkey68.novagenetica.blockentity.BaseMachineBlockEntity;
 import me.orangemonkey68.novagenetica.blockentity.GeneAnalyzerBlockEntity;
+import me.orangemonkey68.novagenetica.blockentity.GeneDecryptorBlockEntity;
 import me.orangemonkey68.novagenetica.blockentity.GeneExtractorBlockEntity;
 import me.orangemonkey68.novagenetica.gui.Generic1x1GuiDescription;
 import me.orangemonkey68.novagenetica.helper.TextureHelper;
@@ -55,6 +56,11 @@ public class NovaGenetica implements ModInitializer {
     public static BlockEntityType<GeneAnalyzerBlockEntity> GENE_ANALYZER_BLOCK_ENTITY_TYPE;
     public static BlockItem GENE_ANALYZER_ITEM;
 
+    public static final Identifier GENE_DECRYPTOR_ID = new Identifier(MOD_ID, "gene_decryptor");
+    public static NovaGeneticaMachineBlock GENE_DECRYPTOR_BLOCK;
+    public static BlockEntityType<GeneDecryptorBlockEntity> GENE_DECRYPTOR_BLOCK_ENTITY_TYPE;
+    public static BlockItem GENE_DECRYPTOR_ITEM;
+
     public static ItemGroup ITEM_GROUP;
     public static final Item EMPTY_SYRINGE_ITEM = Registry.register(Registry.ITEM, new Identifier(MOD_ID, "empty_syringe"), new EmptySyringeItem(new Item.Settings().maxCount(16)));
     public static final Item FILLED_SYRINGE_ITEM = Registry.register(Registry.ITEM, new Identifier(MOD_ID, "filled_syringe"), new FilledSyringeItem(new Item.Settings().maxCount(1)));
@@ -75,6 +81,7 @@ public class NovaGenetica implements ModInitializer {
     @Override
     public void onInitialize() {
         AutoConfig.register(NovaGeneticaConfig.class, Toml4jConfigSerializer::new);
+        NovaGenetica.LOGGER.info("Config registered");
 
         NetworkHandler.initServer();
 
@@ -95,6 +102,9 @@ public class NovaGenetica implements ModInitializer {
         ABILITY_REGISTRY.forEach(Ability::onRegistryServer);
 
         ITEM_GROUP = REGISTRATION_HELPER.buildGroup(ItemHelper.getGene(null, new Identifier(MOD_ID, "none"), true, false, 0xFFFFFF));
+        LOGGER.info("ItemGroup built");
+
+        LOGGER.info("Done initializing");
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -142,6 +152,8 @@ public class NovaGenetica implements ModInitializer {
             }
             return 0xFFFFFF;
         }, MOB_FLAKES);
+
+        LOGGER.info("Color providers registered");
     }
 
     void registerBlocks() {
@@ -162,6 +174,15 @@ public class NovaGenetica implements ModInitializer {
         GENE_ANALYZER_BLOCK_ENTITY_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, GENE_ANALYZER_ID, BlockEntityType.Builder.create(GeneAnalyzerBlockEntity::new, GENE_ANALYZER_BLOCK).build(null));
         GENE_ANALYZER_ITEM = Registry.register(Registry.ITEM, GENE_ANALYZER_ID, new BlockItem(GENE_ANALYZER_BLOCK, itemSettings));
         REGISTRATION_HELPER.addItemToGroup(RegistrationHelper.Subsection.MACHINE, new ItemStack(GENE_ANALYZER_ITEM));
+
+        NovaGeneticaMachineBlock geneDecryptorBlock = new NovaGeneticaMachineBlock();
+        geneDecryptorBlock.setBlockEntity(GeneDecryptorBlockEntity::new);
+        GENE_DECRYPTOR_BLOCK = Registry.register(Registry.BLOCK, GENE_DECRYPTOR_ID, geneDecryptorBlock);
+        GENE_DECRYPTOR_BLOCK_ENTITY_TYPE = Registry.register(Registry.BLOCK_ENTITY_TYPE, GENE_DECRYPTOR_ID, BlockEntityType.Builder.create(GeneDecryptorBlockEntity::new, GENE_DECRYPTOR_BLOCK).build(null));
+        GENE_DECRYPTOR_ITEM = Registry.register(Registry.ITEM, GENE_DECRYPTOR_ID, new BlockItem(GENE_DECRYPTOR_BLOCK, itemSettings));
+        REGISTRATION_HELPER.addItemToGroup(RegistrationHelper.Subsection.MACHINE, new ItemStack(GENE_DECRYPTOR_ITEM));
+
+        LOGGER.info("Machines registered");
     }
 
     void registerAbilities() {
@@ -169,6 +190,8 @@ public class NovaGenetica implements ModInitializer {
         REGISTRATION_HELPER.register(new AbilityResistance(), new Identifier(MOD_ID, "resistance"));
         REGISTRATION_HELPER.register(new AbilityScareCreepers(), new Identifier(MOD_ID, "scare_creepers"));
         REGISTRATION_HELPER.register(new AbilityNone(), new Identifier(MOD_ID, "none"));
+
+        LOGGER.info("Abilities registered");
     }
 
     public static NovaGeneticaConfig getConfig() {
