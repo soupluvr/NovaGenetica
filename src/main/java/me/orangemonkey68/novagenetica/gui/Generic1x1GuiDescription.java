@@ -11,6 +11,7 @@ import me.orangemonkey68.novagenetica.gui.widget.WPowerBar;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 
 public class Generic1x1GuiDescription extends SyncedGuiDescription {
     public static Identifier progressBarBackground = new Identifier(NovaGenetica.MOD_ID, "textures/gui/progress_bar_background.png");
@@ -18,8 +19,15 @@ public class Generic1x1GuiDescription extends SyncedGuiDescription {
     public static Identifier powerBarBackground = new Identifier(NovaGenetica.MOD_ID, "textures/gui/power_bar_background.png");
     public static Identifier powerBarComplete = new Identifier(NovaGenetica.MOD_ID, "textures/gui/power_bar_complete.png");
 
+    private BlockPos pos = null;
+
     public Generic1x1GuiDescription(int syncId, PlayerInventory playerInventory, ScreenHandlerContext ctx){
         super(NovaGenetica.GENERIC_1X1_SCREEN_HANDLER_TYPE, syncId, playerInventory, getBlockInventory(ctx, 2), getBlockPropertyDelegate(ctx, 4));
+
+        ctx.run((world1, pos) -> {
+            Generic1x1GuiDescription.setBlockPosHelper(this, pos);
+        });
+
         WGridPanel root = new WGridPanel();
         setRootPanel(root);
 
@@ -38,6 +46,14 @@ public class Generic1x1GuiDescription extends SyncedGuiDescription {
         addPlayerInv(0, 5);
 
         root.validate(this);
+    }
+
+    private static void setBlockPosHelper(Generic1x1GuiDescription gui, BlockPos pos){
+
+    }
+
+    public void setBlockPos(BlockPos pos){
+        this.pos = pos;
     }
 
     public void addPlayerInv(int x, int y){
@@ -69,5 +85,9 @@ public class Generic1x1GuiDescription extends SyncedGuiDescription {
 
     public void addItemSlot(int x, int y, WItemSlot slot){
         ((WGridPanel)getRootPanel()).add(slot, x ,y);
+    }
+
+    public BlockPos getBlockPos(){
+        return
     }
 }

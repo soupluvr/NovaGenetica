@@ -3,7 +3,7 @@ package me.orangemonkey68.novagenetica.blockentity;
 import me.orangemonkey68.novagenetica.NovaGenetica;
 import me.orangemonkey68.novagenetica.abilities.Ability;
 import me.orangemonkey68.novagenetica.gui.Generic1x1GuiDescription;
-import net.minecraft.block.entity.BlockEntityType;
+import me.orangemonkey68.novagenetica.helper.item.ItemHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -46,14 +46,22 @@ public class GeneDecryptorBlockEntity extends BaseMachineBlockEntity{
         return new Generic1x1GuiDescription(syncId, player.inventory, ScreenHandlerContext.create(world, pos));
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Override
     public void doneProcessing() {
         ItemStack input = itemStacks.get(0);
         CompoundTag tag = input.getTag();
         if(tag != null){
-            tag.putBoolean("identified", true);
-            itemStacks.set(1, input);
-            itemStacks.set(0, ItemStack.EMPTY);
+            Identifier abilityId = new Identifier(tag.getString("ability"));
+            if(NovaGenetica.ABILITY_REGISTRY.containsId(abilityId)){
+                NovaGenetica.LOGGER.info("Ability exists");
+                Ability ability = NovaGenetica.ABILITY_REGISTRY.get(abilityId);
+                ItemStack stack = ItemHelper.getGene(null, abilityId, false, true, ability.getColor());
+
+                itemStacks.set(0, ItemStack.EMPTY);
+                itemStacks.set(1, stack);
+                markDirty();
+            }
         }
     }
 

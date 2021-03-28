@@ -2,7 +2,6 @@ package me.orangemonkey68.novagenetica.helper.item;
 
 import me.orangemonkey68.novagenetica.NovaGenetica;
 import me.orangemonkey68.novagenetica.accessor.NovaGeneticaPlayer;
-import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -55,7 +54,6 @@ public class ItemHelper {
 
         tag.putString("entityType", entityTypeId.toString());
         if(Registry.ENTITY_TYPE.containsId(entityTypeId)){
-            EntityType<?> type = Registry.ENTITY_TYPE.get(entityTypeId);
             tag.putInt("color", color);
         } else {
             tag.putInt("color", 0xFFFFFF);

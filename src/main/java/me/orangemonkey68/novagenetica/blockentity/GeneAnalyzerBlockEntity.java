@@ -1,8 +1,8 @@
 package me.orangemonkey68.novagenetica.blockentity;
 
-import me.orangemonkey68.novagenetica.helper.registration.LootTableHelper;
 import me.orangemonkey68.novagenetica.NovaGenetica;
 import me.orangemonkey68.novagenetica.gui.Generic1x1GuiDescription;
+import me.orangemonkey68.novagenetica.helper.registration.LootTableHelper;
 import me.orangemonkey68.novagenetica.item.GeneItem;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -60,9 +60,8 @@ public class GeneAnalyzerBlockEntity extends BaseMachineBlockEntity {
         if(world != null && !world.isClient){
             ItemStack inputStack = itemStacks.get(0);
             CompoundTag tag = inputStack.getTag();
-            NovaGenetica.LOGGER.info("AAAAAAAAA");
             if(tag != null){
-                if(tag.contains("entityType")){
+                if(tag.contains("entityType") && tag.contains("color")){
                     Identifier entityTypeId = new Identifier(tag.getString("entityType"));
                     if(Registry.ENTITY_TYPE.containsId(entityTypeId) && LootTableHelper.LOOT_TABLE_REGISTRY.containsId(entityTypeId)){
                         //get the loot table for this entity
@@ -72,12 +71,16 @@ public class GeneAnalyzerBlockEntity extends BaseMachineBlockEntity {
                         //generate the loot. IDK why it's saying it can be null
                         if(lootTable != null){
                             List<ItemStack> loot = lootTable.generateLoot(context);
-                            NovaGenetica.LOGGER.info(lootTable.toString());
-                            //print out all loot generated. This should be 1 in length
-//                            System.out.println(loot.toString());
+
+                            ItemStack output = loot.get(0);
+                            CompoundTag outputTag = output.getOrCreateTag();
+
+                            outputTag.putInt("color", tag.getInt("color"));
+
+                            output.setTag(outputTag);
 
                             itemStacks.set(0, ItemStack.EMPTY);
-                            itemStacks.set(1, loot.get(0));
+                            itemStacks.set(1, output);
                         }
                     }
                 }

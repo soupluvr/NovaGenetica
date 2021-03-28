@@ -2,7 +2,6 @@ package me.orangemonkey68.novagenetica.blockentity;
 
 import me.orangemonkey68.novagenetica.NovaGenetica;
 import me.orangemonkey68.novagenetica.gui.Generic1x1GuiDescription;
-import me.orangemonkey68.novagenetica.helper.TextureHelper;
 import me.orangemonkey68.novagenetica.helper.item.ItemHelper;
 import me.orangemonkey68.novagenetica.item.MobFlakesItem;
 import net.minecraft.entity.player.PlayerEntity;
@@ -50,8 +49,8 @@ public class GeneExtractorBlockEntity extends BaseMachineBlockEntity {
 
     ItemStack getOutput(ItemStack input){
         CompoundTag tag = input.getTag();
-        if(tag != null && tag.contains("entityType")){
-            return ItemHelper.getGene(new Identifier(tag.getString("entityType")), null, false, false, tag.contains("color") ? tag.getInt("color") : TextureHelper.BAD_RETURN);
+        if(tag != null && tag.contains("entityType") && tag.contains("color")){
+            return ItemHelper.getGene(new Identifier(tag.getString("entityType")), null, false, false, tag.getInt("color"));
         }
         //this should literally never run
         return ItemStack.EMPTY;
